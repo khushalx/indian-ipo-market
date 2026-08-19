@@ -1,0 +1,5 @@
+.page { padding-top: 46px; }
+.page > header { min-height: 135px; display: flex; align-items: flex-start; justify-content: space-between; gap: 28px; }
+.page h1 { margin: 0; font-family: var(--font-editorial); font-size: clamp(38px, 4vw, 50px); font-weight: 500; line-height: 1; letter-spacing: -.035em; }
+.page header p:last-child { margin: 12px 0 0; color: var(--text-secondary); font-size: 11px; }
+@media (max-width: 600px) { .page { padding-top: 34px; } .page > header { display: block; } .page header :global(.mock-badge) { margin-top: 18px; } }

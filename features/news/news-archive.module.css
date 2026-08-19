@@ -1,0 +1,20 @@
+.controls { min-height: 58px; display: flex; align-items: center; justify-content: space-between; gap: 24px; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.tabs { display: flex; align-self: stretch; gap: 24px; overflow-x: auto; scrollbar-width: none; }
+.tabs button { flex: none; border: 0; border-bottom: 2px solid transparent; background: transparent; padding: 0; color: var(--text-secondary); font-size: 9px; cursor: pointer; }
+.tabs .active { border-color: var(--accent); color: var(--accent); font-weight: 650; }
+.controls > label { width: 220px; height: 34px; display: flex; align-items: center; gap: 8px; border: 1px solid var(--line); background: var(--surface); padding: 0 9px; color: var(--text-tertiary); }
+.controls input { width: 100%; border: 0; outline: 0; background: transparent; font-size: 9px; }
+.list { border-bottom: 1px solid var(--line); }
+.list article { display: grid; grid-template-columns: 155px minmax(260px, 1.1fr) 1fr 170px; gap: 24px; align-items: center; min-height: 91px; border-bottom: 1px solid var(--line-soft); }
+.list article:last-child { border-bottom: 0; }
+.list article > div { display: grid; gap: 6px; }
+.list article > div span { color: var(--accent); font-size: 7px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+.list time, .list small { color: var(--text-tertiary); font-size: 8px; }
+.list article > a { font-family: var(--font-editorial); font-size: 16px; line-height: 1.35; }
+.list article > a:hover { text-decoration: underline; text-underline-offset: 3px; }
+.list p { margin: 0; color: var(--text-secondary); font-size: 9px; line-height: 1.55; }
+.empty { padding: 80px 0; text-align: center; }
+.empty h2 { margin: 0; font-family: var(--font-editorial); font-size: 23px; font-weight: 500; }
+.empty p { color: var(--text-secondary); font-size: 10px; }
+@media (max-width: 840px) { .list article { grid-template-columns: 110px 1fr; padding: 18px 0; } .list article p, .list article > small { grid-column: 2; } }
+@media (max-width: 600px) { .controls { display: block; padding-bottom: 12px; } .tabs { min-height: 48px; gap: 20px; } .controls > label { width: 100%; } .list article { display: block; } .list article > div { display: flex; justify-content: space-between; } .list article > a { display: block; margin-top: 10px; font-size: 18px; } .list article p { margin-top: 9px; } .list article > small { display: block; margin-top: 10px; } }

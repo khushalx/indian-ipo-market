@@ -1,0 +1,13 @@
+.footer { margin-top: 84px; border-top: 1px solid var(--line); background: var(--surface-muted); }
+.disclaimer { display: grid; grid-template-columns: 170px 1fr; gap: 28px; padding-block: 22px; border-bottom: 1px solid var(--line); }
+.disclaimer strong { color: var(--text); font-size: 10px; }
+.disclaimer p { max-width: 860px; margin: 0; color: var(--text-tertiary); font-size: 9px; line-height: 1.6; }
+.bottom { min-height: 96px; display: grid; grid-template-columns: 200px 1fr auto; align-items: center; gap: 28px; }
+.brand { display: flex; align-items: center; gap: 8px; font-size: 10px; font-weight: 750; letter-spacing: .12em; }
+.brand span { display: grid; width: 23px; height: 23px; place-items: center; background: var(--accent); color: white; font-family: Georgia, serif; font-size: 13px; letter-spacing: 0; }
+.bottom p { margin: 0; color: var(--text-tertiary); font-size: 9px; }
+.bottom nav { display: flex; gap: 18px; color: var(--text-secondary); font-size: 9px; }
+@media (max-width: 700px) {
+  .disclaimer, .bottom { grid-template-columns: 1fr; gap: 12px; }
+  .bottom { padding-block: 24px; }
+}

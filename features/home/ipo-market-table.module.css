@@ -1,0 +1,45 @@
+.tabs { min-height: 45px; display: flex; align-items: stretch; gap: 27px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
+.tabs button { flex: none; border: 0; border-bottom: 2px solid transparent; background: none; padding: 0; color: var(--text-secondary); font-size: 11px; cursor: pointer; }
+.tabs button span { margin-left: 3px; color: var(--text-tertiary); font-size: 8px; }
+.tabs .active { border-color: var(--accent); color: var(--accent); font-weight: 650; }
+.tabs > a { flex: none; margin-left: auto; display: flex; align-items: center; gap: 5px; color: var(--text-secondary); font-size: 9px; font-weight: 620; }
+.desktopTable { overflow-x: auto; background: var(--surface); border-bottom: 1px solid var(--line); }
+.desktopTable table { width: 100%; min-width: 1050px; border-collapse: collapse; }
+.desktopTable th { border-bottom: 1px solid var(--line); padding: 12px 13px; text-align: left; color: var(--text-tertiary); font-size: 8px; font-weight: 670; letter-spacing: .09em; text-transform: uppercase; white-space: nowrap; }
+.desktopTable td { height: 66px; border-bottom: 1px solid var(--line-soft); padding: 10px 13px; color: var(--text); font-size: 11px; white-space: nowrap; }
+.desktopTable tbody tr:last-child td { border-bottom: 0; }
+.desktopTable tbody tr:hover { background: #faf8f2; }
+.company { display: block; min-width: 185px; }
+.company strong, .company small { display: block; }
+.company strong { color: var(--ink); font-size: 12px; font-weight: 650; }
+.company small { margin-top: 5px; color: var(--text-tertiary); font-size: 8px; }
+.number { font-variant-numeric: tabular-nums; }
+.number b, .number small { display: block; }
+.number b { font-size: 11px; }
+.number small { margin-top: 4px; font-size: 8px; }
+.strong { color: var(--ink) !important; font-weight: 650; }
+.missing { color: var(--text-tertiary); }
+.status { display: inline-block; border-left: 2px solid currentColor; padding: 3px 0 3px 6px; font-size: 7px; font-weight: 760; letter-spacing: .09em; text-transform: uppercase; }
+.open { color: var(--green); }
+.upcoming { color: #55627a; }
+.closed { color: var(--ochre); }
+.listed { color: var(--text-secondary); }
+.withdrawn { color: var(--red); }
+.mobileList { display: none; }
+.mobileItem { border-bottom: 1px solid var(--line); padding: 18px 0; }
+.mobileTop, .mobileMeta { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.mobileTop strong, .mobileTop small { display: block; }
+.mobileTop strong { font-size: 13px; }
+.mobileTop small { margin-top: 5px; color: var(--text-tertiary); font-size: 9px; }
+.mobileMeta { align-items: center; margin-top: 14px; color: var(--text-tertiary); font-size: 9px; }
+.mobileItem dl { display: grid; grid-template-columns: repeat(2, 1fr); gap: 13px; margin: 17px 0 0; }
+.mobileItem dl div { border-left: 1px solid var(--line); padding-left: 10px; }
+.mobileItem dt { color: var(--text-tertiary); font-size: 8px; }
+.mobileItem dd { margin: 5px 0 0; font-size: 11px; font-variant-numeric: tabular-nums; }
+
+@media (max-width: 720px) {
+  .tabs { gap: 22px; }
+  .tabs > a { display: none; }
+  .desktopTable { display: none; }
+  .mobileList { display: block; }
+}

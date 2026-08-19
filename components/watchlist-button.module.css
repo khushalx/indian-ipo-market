@@ -1,0 +1,4 @@
+.button { display: inline-flex; min-height: 36px; align-items: center; justify-content: center; gap: 8px; border: 1px solid var(--line-strong); background: transparent; padding: 0 13px; color: var(--text); font-size: 10px; font-weight: 620; cursor: pointer; }
+.button:hover { background: var(--surface); border-color: var(--ink); }
+.saved { border-color: color-mix(in srgb, var(--accent) 38%, var(--line)); color: var(--accent); background: var(--accent-soft); }
+.compact { width: 30px; height: 30px; min-height: 30px; padding: 0; }

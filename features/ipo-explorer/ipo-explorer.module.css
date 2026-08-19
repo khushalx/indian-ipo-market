@@ -1,0 +1,67 @@
+.controls { display: grid; grid-template-columns: minmax(250px, 400px) 1fr auto; gap: 10px; align-items: center; }
+.search { height: 39px; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 9px; border: 1px solid var(--line); background: var(--surface); padding: 0 12px; color: var(--text-tertiary); }
+.search input { width: 100%; border: 0; outline: 0; background: transparent; color: var(--ink); font-size: 11px; }
+.search button { display: grid; border: 0; background: transparent; padding: 3px; color: var(--text-tertiary); cursor: pointer; }
+.sort { height: 39px; display: flex; align-items: center; gap: 7px; border: 1px solid var(--line); padding: 0 9px; background: var(--surface); color: var(--text-tertiary); }
+.sort span { font-size: 9px; }
+.sort select { border: 0; outline: 0; background: transparent; color: var(--text); font-size: 10px; }
+.mobileFilter { display: none; }
+.filterBar { min-height: 67px; display: flex; align-items: center; gap: 23px; border-bottom: 1px solid var(--line); }
+.filterBar label { display: grid; gap: 5px; }
+.filterBar label span { color: var(--text-tertiary); font-size: 7px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.filterBar select { min-width: 92px; border: 0; outline: 0; background: transparent; color: var(--text); font-size: 10px; }
+.clearFilters { border: 0; background: transparent; color: var(--accent); font-size: 9px; cursor: pointer; }
+.resultMeta { min-height: 43px; display: flex; align-items: center; justify-content: space-between; }
+.resultMeta p { margin: 0; color: var(--text-secondary); font-size: 9px; }
+.resultMeta p strong { color: var(--ink); font-size: 11px; }
+.resultMeta > span { color: var(--text-tertiary); font-size: 8px; }
+.tableWrap { overflow-x: auto; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); background: var(--surface); }
+.tableWrap table { min-width: 1150px; width: 100%; border-collapse: collapse; }
+.tableWrap th { height: 37px; padding: 0 11px; border-bottom: 1px solid var(--line); color: var(--text-tertiary); font-size: 7px; font-weight: 700; letter-spacing: .08em; text-align: left; text-transform: uppercase; white-space: nowrap; }
+.tableWrap td { height: 67px; padding: 9px 11px; border-bottom: 1px solid var(--line-soft); color: var(--text); font-size: 10px; white-space: nowrap; }
+.tableWrap tbody tr:last-child td { border-bottom: 0; }
+.tableWrap tbody tr:hover { background: #faf8f2; }
+.company { min-width: 190px; display: flex; align-items: center; gap: 10px; }
+.company > span, .mobileTitle a > span { display: grid; width: 30px; height: 30px; flex: none; place-items: center; border: 1px solid var(--line); background: var(--paper); color: var(--accent); font-family: var(--font-editorial); font-size: 13px; }
+.company strong, .company small, .tableWrap td > small, .tableWrap td > b { display: block; }
+.company strong { color: var(--ink); font-size: 11px; font-weight: 650; }
+.company small, .exchanges, .tableWrap td > small { margin-top: 4px; color: var(--text-tertiary); font-size: 7px; }
+.numeric { font-variant-numeric: tabular-nums; }
+.bold { color: var(--ink) !important; font-weight: 650; }
+.status { display: inline-block; border-left: 2px solid currentColor; padding: 3px 0 3px 6px; font-size: 7px; font-weight: 750; letter-spacing: .08em; text-transform: uppercase; }
+.open { color: var(--green); }
+.upcoming { color: #55627a; }
+.closed { color: var(--ochre); }
+.listed { color: var(--text-secondary); }
+.withdrawn { color: var(--red); }
+.na { color: var(--text-tertiary); }
+.mobileResults { display: none; }
+.empty { border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); padding: 80px 20px; text-align: center; color: var(--text-tertiary); }
+.empty h2 { margin: 14px 0 7px; color: var(--ink); font-family: var(--font-editorial); font-size: 23px; font-weight: 500; }
+.empty p { margin: 0 0 18px; font-size: 10px; }
+.empty button { min-height: 35px; border: 1px solid var(--ink); background: transparent; padding: 0 13px; color: var(--ink); font-size: 9px; cursor: pointer; }
+
+@media (max-width: 760px) {
+  .controls { grid-template-columns: 1fr auto; }
+  .search { grid-column: 1 / -1; }
+  .mobileFilter { display: flex; align-items: center; gap: 7px; width: max-content; height: 37px; border: 1px solid var(--line); background: var(--surface); padding: 0 10px; color: var(--text); font-size: 9px; }
+  .mobileFilter b { display: grid; width: 15px; height: 15px; place-items: center; background: var(--accent); color: #fff; font-size: 7px; }
+  .filterBar { display: none; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-top: 10px; border: 1px solid var(--line); background: var(--surface); padding: 16px; }
+  .filterBarOpen { display: grid; }
+  .filterBar select { width: 100%; border-bottom: 1px solid var(--line); padding-bottom: 5px; }
+  .resultMeta > span { display: none; }
+  .tableWrap { display: none; }
+  .mobileResults { display: block; border-top: 1px solid var(--line); }
+  .mobileResults article { border-bottom: 1px solid var(--line); padding: 19px 0; }
+  .mobileTitle, .mobileTitle > a, .mobileState { display: flex; align-items: flex-start; justify-content: space-between; gap: 11px; }
+  .mobileTitle > a { justify-content: flex-start; }
+  .mobileTitle strong, .mobileTitle small { display: block; }
+  .mobileTitle strong { font-size: 12px; }
+  .mobileTitle small { margin-top: 5px; color: var(--text-tertiary); font-size: 8px; }
+  .mobileState { align-items: center; margin-top: 14px; color: var(--text-tertiary); font-size: 8px; }
+  .mobileResults dl { display: grid; grid-template-columns: repeat(2, 1fr); gap: 13px; margin: 18px 0; }
+  .mobileResults dl div { border-left: 1px solid var(--line); padding-left: 9px; }
+  .mobileResults dt { color: var(--text-tertiary); font-size: 7px; }
+  .mobileResults dd { margin: 5px 0 0; font-size: 10px; font-variant-numeric: tabular-nums; }
+  .viewDetail { display: flex; justify-content: space-between; border-top: 1px solid var(--line-soft); padding-top: 12px; color: var(--text-secondary); font-size: 9px; }
+}
