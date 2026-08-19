@@ -29,8 +29,12 @@ export async function generateMetadata({ params }: RouteProps): Promise<Metadata
       };
     }
 
-    const title = `${ipo.company.name} IPO: GMP, Price Band, Subscription, Dates & Financials`;
-    const description = `${ipo.company.name} IPO price band ${formatRupees(ipo.priceBandMin)}–${formatRupees(ipo.priceBandMax)}, GMP, subscription, financials, valuation, timeline and offer documents.`;
+    const hasPriceBand = ipo.priceBandMin != null && ipo.priceBandMax != null;
+    const title = `${ipo.company.name} IPO: Documents, Dates, GMP & Subscription`;
+    const priceBand = hasPriceBand
+      ? `price band ${formatRupees(ipo.priceBandMin)}–${formatRupees(ipo.priceBandMax)}`
+      : "price band not yet announced";
+    const description = `${ipo.company.name} IPO ${priceBand}. View verified dates, source documents, GMP, subscription and available financials.`;
 
     return {
       title,

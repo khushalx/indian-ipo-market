@@ -8,18 +8,39 @@ import { WatchlistButton } from "@/components/watchlist-button";
 import type { IPO, IPODocument } from "@/types";
 import {
   formatCrore,
+  formatBoard,
+  formatCompactDateTime,
   formatDate,
   formatExchange,
   formatMultiple,
   formatRupees,
+  formatPriceBand,
   signedPercent,
   signedRupees,
   titleCase,
 } from "./format";
 import styles from "./ipo-detail.module.css";
+import { SourceLine } from "./DetailPrimitives";
 
-const documentHref = (documents: IPODocument[], type: IPODocument["type"]) =>
-  documents.find((document) => document.type === type)?.url;
+const documentHref = (documents: IPODocument[], type: IPODocument["type"]) => {
+  const document = documents.find((item) => item.type === type);
+  return document?.availability === "not_found" ? undefined : document?.url;
+};
+
+const finalSubscriptionStatuses = new Set<IPO["status"]>([
+  "closed",
+  "allotment_pending",
+  "allotment_complete",
+  "listing_upcoming",
+  "listed",
+]);
+
+function subscriptionDetail(ipo: IPO): string {
+  if (ipo.subscriptionTotal == null) return "No subscription figure reported";
+  if (ipo.status === "open") return "As reported so far";
+  if (finalSubscriptionStatuses.has(ipo.status)) return "Final reported";
+  return "Latest reported value";
+}
 
 export function DetailHeader({
   ipo,
@@ -28,16 +49,21 @@ export function DetailHeader({
   ipo: IPO;
   documents: IPODocument[];
 }) {
-  const minimumInvestment = ipo.priceBandMax * ipo.lotSize;
+  const minimumInvestment = ipo.priceBandMax != null && ipo.lotSize != null ? ipo.priceBandMax * ipo.lotSize : undefined;
   const gmpPercent =
-    ipo.gmp == null || ipo.priceBandMax === 0
+    ipo.gmp == null || !ipo.priceBandMax
       ? undefined
       : (ipo.gmp / ipo.priceBandMax) * 100;
   const estimatedListingPrice =
     ipo.estimatedListingPrice ??
-    (ipo.gmp == null ? undefined : ipo.priceBandMax + ipo.gmp);
+    (ipo.gmp == null || ipo.priceBandMax == null ? undefined : ipo.priceBandMax + ipo.gmp);
   const drhp = documentHref(documents, "drhp");
   const rhp = documentHref(documents, "rhp");
+  const gmpTone = ipo.gmp == null || ipo.gmp === 0
+    ? styles.gmpNeutral
+    : ipo.gmp > 0
+      ? styles.gmpPositive
+      : styles.gmpNegative;
 
   return (
     <header className={styles.hero}>
@@ -49,7 +75,7 @@ export function DetailHeader({
           <span aria-hidden="true">/</span>
           <span aria-current="page">{ipo.company.name}</span>
         </div>
-        <div className={styles.mockMarker}><span aria-hidden="true" />Development data · Not live</div>
+        {ipo.mockDisclaimer ? <div className={styles.mockMarker}><span aria-hidden="true" />Development data · Not live</div> : <SourceLine source={ipo.source} updatedAt={ipo.updatedAt ?? ipo.fetchedAt} compact />}
       </div>
 
       <div className={styles.heroTop}>
@@ -62,13 +88,13 @@ export function DetailHeader({
               <span className={`${styles.status} ${styles[`status_${ipo.status}`]}`}>
                 {titleCase(ipo.status)}
               </span>
-              <span>{titleCase(ipo.type)}</span>
-              <span>{ipo.exchange.map(formatExchange).join(" · ")}</span>
+              <span>{formatBoard(ipo.type)}</span>
+              <span>{ipo.exchange.length ? ipo.exchange.map(formatExchange).join(" · ") : "Exchange not announced"}</span>
             </div>
             <h1>{ipo.company.name} IPO</h1>
             <p>
-              {ipo.company.industry} <span aria-hidden="true">·</span>{" "}
-              {ipo.company.headquarters}
+              {ipo.company.industry ?? "Industry not available"} <span aria-hidden="true">·</span>{" "}
+              {ipo.company.headquarters ?? "Location not available"}
             </p>
           </div>
         </div>
@@ -101,7 +127,7 @@ export function DetailHeader({
         <div>
           <dt>Price band</dt>
           <dd>
-            {formatRupees(ipo.priceBandMin)}–{formatRupees(ipo.priceBandMax)}
+            {formatPriceBand(ipo.priceBandMin, ipo.priceBandMax)}
           </dd>
           <small>Face value {formatRupees(ipo.faceValue)}</small>
         </div>
@@ -112,13 +138,21 @@ export function DetailHeader({
         </div>
         <div>
           <dt>Lot / minimum</dt>
-          <dd>{ipo.lotSize.toLocaleString("en-IN")} shares</dd>
+          <dd>{ipo.lotSize == null ? "Not announced" : `${ipo.lotSize.toLocaleString("en-IN")} shares`}</dd>
           <small>{formatRupees(minimumInvestment)} at upper band</small>
         </div>
-        <div className={styles.gmpMetric}>
+        <div className={`${styles.gmpMetric} ${gmpTone}`}>
           <dt>Current GMP</dt>
-          <dd>{signedRupees(ipo.gmp)}</dd>
-          <small>{signedPercent(gmpPercent)} unofficial</small>
+          <dd>{ipo.gmp == null ? "Not available" : signedRupees(ipo.gmp)}</dd>
+          <small>
+            {ipo.gmp == null ? "No unofficial quote reported" : (
+              <>
+                {gmpPercent == null ? null : `${signedPercent(gmpPercent)} · `}
+                Unofficial
+                {ipo.gmpUpdatedAt ? ` · Updated ${formatCompactDateTime(ipo.gmpUpdatedAt)}` : " · Update time unavailable"}
+              </>
+            )}
+          </small>
         </div>
         <div>
           <dt>Est. listing price</dt>
@@ -127,8 +161,8 @@ export function DetailHeader({
         </div>
         <div>
           <dt>Total subscription</dt>
-          <dd>{formatMultiple(ipo.subscriptionTotal)}</dd>
-          <small>{ipo.status === "open" ? "As reported so far" : "Final reported"}</small>
+          <dd>{ipo.subscriptionTotal == null ? "Not available" : formatMultiple(ipo.subscriptionTotal)}</dd>
+          <small>{subscriptionDetail(ipo)}</small>
         </div>
       </dl>
 

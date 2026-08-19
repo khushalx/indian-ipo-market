@@ -33,13 +33,15 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  const [ipos, news] = await Promise.all([ipoProvider.getIPOs(), newsProvider.getNews({ limit: 12 })]);
+  const [ipoResult, newsResult] = await Promise.allSettled([ipoProvider.getIPOs(), newsProvider.getNews({ limit: 12 })]);
+  const ipos = ipoResult.status === "fulfilled" ? ipoResult.value : [];
+  const news = newsResult.status === "fulfilled" ? newsResult.value : [];
   return (
     <html lang="en-IN">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <a className="skip-link" href="#main-content">Skip to content</a>
         <SiteHeader
-          ipos={ipos.map((ipo) => ({ id: ipo.id, slug: ipo.slug, name: ipo.company.name, industry: ipo.company.industry, status: ipo.status, type: ipo.type }))}
+          ipos={ipos.map((ipo) => ({ id: ipo.id, slug: ipo.slug, name: ipo.company.name, industry: ipo.company.industry ?? "Industry not available", status: ipo.status, type: ipo.type }))}
           news={news.map((item) => ({ id: item.id, headline: item.headline, category: item.category, company: ipos.find((ipo) => ipo.id === item.ipoId)?.company.name, ipoSlug: ipos.find((ipo) => ipo.id === item.ipoId)?.slug }))}
         />
         <div id="main-content">{children}</div>

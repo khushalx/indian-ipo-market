@@ -1,0 +1,39 @@
+.quote,
+.amount,
+.meta {
+  display: block;
+}
+
+.quote {
+  font-variant-numeric: tabular-nums;
+}
+
+.amount {
+  font-weight: 680;
+}
+
+.meta {
+  margin-top: 4px;
+  color: var(--text-tertiary);
+  font-size: 8px;
+  font-weight: 450;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+.positive {
+  color: var(--green);
+}
+
+.negative {
+  color: var(--red);
+}
+
+.neutral,
+.unavailable {
+  color: var(--text-secondary);
+}
+
+.timestamp {
+  color: var(--text-tertiary);
+}

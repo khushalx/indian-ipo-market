@@ -133,15 +133,15 @@ export const mockIPOEvents: IPOEvent[] = [
 
 const mockUrl = (path: string) => `https://example.com/mock-ipo-documents/${path}`;
 export const mockDocuments: IPODocument[] = [
-  { id: "doc-silveroak-drhp", ipoId: "ipo-silveroak", type: "drhp", title: "Draft Red Herring Prospectus", publishedAt: "2025-11-14", url: mockUrl("silveroak-drhp.pdf"), source: sources.sebi },
-  { id: "doc-silveroak-rhp", ipoId: "ipo-silveroak", type: "rhp", title: "Red Herring Prospectus", publishedAt: "2026-08-11", url: mockUrl("silveroak-rhp.pdf"), source: sources.rhp },
-  { id: "doc-silveroak-anchor", ipoId: "ipo-silveroak", type: "anchor_allocation", title: "Anchor Investor Allocation", publishedAt: "2026-08-14", url: mockUrl("silveroak-anchor.pdf"), source: sources.nse },
-  { id: "doc-vertex-drhp", ipoId: "ipo-vertex", type: "drhp", title: "Draft Red Herring Prospectus", publishedAt: "2025-10-02", url: mockUrl("vertex-drhp.pdf"), source: sources.sebi },
-  { id: "doc-vertex-rhp", ipoId: "ipo-vertex", type: "rhp", title: "Red Herring Prospectus", publishedAt: "2026-08-10", url: mockUrl("vertex-rhp.pdf"), source: sources.rhp },
-  { id: "doc-prakash-drhp", ipoId: "ipo-prakash", type: "drhp", title: "Draft Red Herring Prospectus", publishedAt: "2025-09-19", url: mockUrl("prakash-drhp.pdf"), source: sources.sebi },
-  { id: "doc-prakash-rhp", ipoId: "ipo-prakash", type: "rhp", title: "Red Herring Prospectus", publishedAt: "2026-08-03", url: mockUrl("prakash-rhp.pdf"), source: sources.rhp },
-  { id: "doc-prakash-anchor", ipoId: "ipo-prakash", type: "anchor_allocation", title: "Anchor Investor Allocation", publishedAt: "2026-08-07", url: mockUrl("prakash-anchor.pdf"), source: sources.nse },
-  { id: "doc-prakash-allotment", ipoId: "ipo-prakash", type: "basis_of_allotment", title: "Basis of Allotment", publishedAt: "2026-08-18", url: mockUrl("prakash-allotment.pdf"), source: sources.nse },
+  { id: "doc-silveroak-drhp", ipoId: "ipo-silveroak", type: "drhp", title: "Draft Red Herring Prospectus", publishedAt: "2025-11-14", url: mockUrl("silveroak-drhp.pdf"), availability: "available", checkedAt: mockAsOf, httpStatus: 200, source: sources.sebi },
+  { id: "doc-silveroak-rhp", ipoId: "ipo-silveroak", type: "rhp", title: "Red Herring Prospectus", publishedAt: "2026-08-11", url: mockUrl("silveroak-rhp.pdf"), availability: "available", checkedAt: mockAsOf, httpStatus: 200, source: sources.rhp },
+  { id: "doc-silveroak-anchor", ipoId: "ipo-silveroak", type: "anchor_allocation", title: "Anchor Investor Allocation", publishedAt: "2026-08-14", url: mockUrl("silveroak-anchor.pdf"), availability: "unchecked", source: sources.nse },
+  { id: "doc-vertex-drhp", ipoId: "ipo-vertex", type: "drhp", title: "Draft Red Herring Prospectus", publishedAt: "2025-10-02", url: mockUrl("vertex-drhp.pdf"), availability: "not_found", checkedAt: mockAsOf, httpStatus: 404, source: sources.sebi },
+  { id: "doc-vertex-rhp", ipoId: "ipo-vertex", type: "rhp", title: "Red Herring Prospectus", publishedAt: "2026-08-10", url: mockUrl("vertex-rhp.pdf"), availability: "available", checkedAt: mockAsOf, httpStatus: 200, source: sources.rhp },
+  { id: "doc-prakash-drhp", ipoId: "ipo-prakash", type: "drhp", title: "Draft Red Herring Prospectus", publishedAt: "2025-09-19", url: mockUrl("prakash-drhp.pdf"), availability: "available", checkedAt: mockAsOf, httpStatus: 200, source: sources.sebi },
+  { id: "doc-prakash-rhp", ipoId: "ipo-prakash", type: "rhp", title: "Red Herring Prospectus", publishedAt: "2026-08-03", url: mockUrl("prakash-rhp.pdf"), availability: "available", checkedAt: mockAsOf, httpStatus: 200, source: sources.rhp },
+  { id: "doc-prakash-anchor", ipoId: "ipo-prakash", type: "anchor_allocation", title: "Anchor Investor Allocation", publishedAt: "2026-08-07", url: mockUrl("prakash-anchor.pdf"), availability: "unknown", checkedAt: mockAsOf, httpStatus: 503, source: sources.nse },
+  { id: "doc-prakash-allotment", ipoId: "ipo-prakash", type: "basis_of_allotment", title: "Basis of Allotment", publishedAt: "2026-08-18", url: mockUrl("prakash-allotment.pdf"), availability: "unchecked", source: sources.nse },
 ];
 
 const peerRows = (ipoId: string, entries: Array<Omit<IPOPeer, "id" | "ipoId" | "source">>): IPOPeer[] => entries.map((entry, index) => ({ id: `peer-${ipoId}-${index + 1}`, ipoId, source: sources.rhp, ...entry }));

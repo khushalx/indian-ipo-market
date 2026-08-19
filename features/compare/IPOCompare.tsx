@@ -2,7 +2,7 @@
 
 import { useMemo, useState, type ReactNode } from "react";
 import { Plus, X } from "lucide-react";
-import { formatCrore, formatIndianCurrency, formatMultiple, formatPercent } from "@/lib/format";
+import { formatBoard, formatCrore, formatIndianCurrency, formatMultiple, formatPercent, formatPriceBand } from "@/lib/format";
 import type { IPO, IPOFinancial } from "@/types";
 import styles from "./compare.module.css";
 
@@ -10,6 +10,7 @@ interface IPOCompareProps {
   ipos: IPO[];
   financials: IPOFinancial[];
   defaultSelection?: string[];
+  dataUnavailable?: boolean;
 }
 
 interface FinancialSnapshot {
@@ -68,7 +69,7 @@ function getFinancialSnapshot(rows: IPOFinancial[]): FinancialSnapshot {
 }
 
 function formatType(ipo: IPO) {
-  return ipo.type === "sme" ? "SME" : "Mainboard";
+  return formatBoard(ipo.type);
 }
 
 function formatStatus(ipo: IPO) {
@@ -80,7 +81,7 @@ const metricSections: MetricSection[] = [
     label: "Offer details",
     rows: [
       { label: "Type", value: (ipo) => formatType(ipo) },
-      { label: "Price band", value: (ipo) => `${formatIndianCurrency(ipo.priceBandMin)}–${formatIndianCurrency(ipo.priceBandMax).replace("₹", "")}` },
+      { label: "Price band", value: (ipo) => formatPriceBand(ipo.priceBandMin, ipo.priceBandMax) },
       { label: "Issue size", note: "Total offer", value: (ipo) => money(ipo.issueSizeCr) },
       { label: "Fresh issue", note: "Capital to company", value: (ipo) => money(ipo.freshIssueCr) },
       { label: "Offer for sale", note: "Proceeds to sellers", value: (ipo) => ipo.offerForSaleCr === 0 ? "None" : money(ipo.offerForSaleCr) },
@@ -93,7 +94,7 @@ const metricSections: MetricSection[] = [
         label: "GMP",
         note: "Unregulated market",
         value: (ipo) => {
-          if (ipo.gmp === undefined) return null;
+          if (ipo.gmp === undefined || !ipo.priceBandMax) return null;
           const gmpPercent = (ipo.gmp / ipo.priceBandMax) * 100;
           return (
             <span className={ipo.gmp >= 0 ? styles.positive : styles.negative}>
@@ -141,7 +142,7 @@ const metricSections: MetricSection[] = [
   },
 ];
 
-export default function IPOCompare({ ipos, financials, defaultSelection = [] }: IPOCompareProps) {
+export default function IPOCompare({ ipos, financials, defaultSelection = [], dataUnavailable = false }: IPOCompareProps) {
   const fallbackSelection = ipos.filter((ipo) => ipo.status === "open").slice(0, 2).map((ipo) => ipo.id);
   const [selectedIds, setSelectedIds] = useState(() =>
     (defaultSelection.length ? defaultSelection : fallbackSelection).filter((id) => ipos.some((ipo) => ipo.id === id)).slice(0, 3),
@@ -174,7 +175,7 @@ export default function IPOCompare({ ipos, financials, defaultSelection = [] }: 
           <p className={styles.lede}>Put issue structure, demand, financial quality and valuation on the same footing.</p>
         </div>
         <div className={styles.introMeta}>
-          <div className={styles.dataNote}><span aria-hidden="true" />Development data · Not live</div>
+          {dataUnavailable ? <div className={styles.dataNote}><span aria-hidden="true" />Data temporarily unavailable</div> : ipos.some((ipo) => ipo.mockDisclaimer) ? <div className={styles.dataNote}><span aria-hidden="true" />Development data · Not live</div> : null}
           <div className={styles.limitNote}><strong>{selectedIPOs.length}</strong> / 3 selected</div>
         </div>
       </header>
@@ -215,7 +216,7 @@ export default function IPOCompare({ ipos, financials, defaultSelection = [] }: 
                     </button>
                   )}
                 </div>
-                <p>{selected ? `${formatStatus(selected)} · ${selected.company.industry}` : "Search the complete IPO directory"}</p>
+                <p>{selected ? `${formatStatus(selected)} · ${selected.company.industry ?? "Industry not available"}` : "Search the complete IPO directory"}</p>
               </div>
             );
           })}

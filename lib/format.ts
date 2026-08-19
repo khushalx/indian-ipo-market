@@ -1,5 +1,6 @@
 export type CurrencyUnit = "rupees" | "crore" | "lakh";
 export type DateFormat = "short" | "medium" | "long" | "numeric";
+export type GMPDirection = "positive" | "negative" | "neutral";
 
 const indianNumber = new Intl.NumberFormat("en-IN", { maximumFractionDigits: 2 });
 const dateFormats: Record<DateFormat, Intl.DateTimeFormatOptions> = {
@@ -43,7 +44,20 @@ export function formatSubscription(value: number | null | undefined): string {
 
 export function formatGMP(value: number | null | undefined, percent?: number | null): string {
   if (value === null || value === undefined || Number.isNaN(value)) return "—";
-  return percent === null || percent === undefined ? `₹${indianNumber.format(value)}` : `₹${indianNumber.format(value)} (${formatPercent(percent, { sign: true })})`;
+  return percent === null || percent === undefined
+    ? signedRupees(value)
+    : `${signedRupees(value)} (${signedPercent(percent)})`;
+}
+
+export function gmpDirection(value: number): GMPDirection {
+  if (value > 0) return "positive";
+  if (value < 0) return "negative";
+  return "neutral";
+}
+
+export function calculateGMPPercent(value?: number, upperPriceBand?: number): number | undefined {
+  if (value == null || upperPriceBand == null || upperPriceBand <= 0) return undefined;
+  return (value / upperPriceBand) * 100;
 }
 
 export function formatMarketValue(value: number | null | undefined, maximumFractionDigits = 2): string {
@@ -59,6 +73,17 @@ export function formatNumber(value: number | null | undefined, suffix = ""): str
 export const formatRupees = (value: number | null | undefined) => formatIndianCurrency(value);
 export const formatMultiple = (value: number | null | undefined) => formatSubscription(value);
 
+export function formatPriceBand(min?: number | null, max?: number | null): string {
+  if (min == null || max == null) return "Not announced";
+  return `${formatIndianCurrency(min)}–${formatIndianCurrency(max).replace("₹", "")}`;
+}
+
+export function formatBoard(value: string): string {
+  if (value === "sme") return "SME";
+  if (value === "mainboard") return "Mainboard";
+  return "Board not verified";
+}
+
 export function formatDateTime(value: string | Date | null | undefined): string {
   if (!value) return "—";
   const date = value instanceof Date ? value : new Date(value);
@@ -71,6 +96,21 @@ export function formatDateTime(value: string | Date | null | undefined): string 
     minute: "2-digit",
     timeZone: "Asia/Kolkata",
     timeZoneName: "short",
+  }).format(date);
+}
+
+/** A stable, compact IST timestamp for dense market-data surfaces. */
+export function formatCompactDateTime(value: string | Date | null | undefined): string {
+  if (!value) return "—";
+  const date = value instanceof Date ? value : new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+  return new Intl.DateTimeFormat("en-IN", {
+    day: "numeric",
+    month: "short",
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+    timeZone: "Asia/Kolkata",
   }).format(date);
 }
 

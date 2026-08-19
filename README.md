@@ -1,40 +1,69 @@
 # Artha IPO
 
-Phase 1 foundation for a premium Indian IPO and primary-market intelligence product. The application is intentionally powered by structured development fixtures—no live exchange scraping or investment recommendations are present.
+Artha IPO is an Indian primary-market intelligence site. Phase 2 keeps the Phase 1 product UI, but production reads normalized, source-aware records from a persistent database instead of development fixtures.
 
-## Product routes
+## Data contract
 
-- `/` — active IPO-market homepage, market strip, activity, calendar preview and news
-- `/ipos` — searchable, filterable and sortable Mainboard/SME IPO directory
-- `/ipo/[slug]` — GMP, subscription, financials, valuation, company, proceeds, timeline, documents and news
-- `/calendar` — month and timeline IPO-event views
-- `/compare` — comparison for up to three IPOs
-- `/markets` — Phase 1 market-context view
-- `/news` — searchable editorial archive
+The production flow is:
 
-## Architecture
+```text
+official / configured provider
+  → server-side adapter
+  → Zod validation and normalization
+  → conservative company resolution and reconciliation
+  → D1 history + provenance tables
+  → database read providers
+  → server-rendered website
+```
 
-The UI reads through provider contracts in `lib/providers/`. `MockIPOProvider`, `MockMarketProvider`, `MockGMPProvider`, `MockNewsProvider` and `MockDocumentsProvider` currently implement those contracts using the fixtures in `data/mock-ipo-data.ts`.
+Consumer routes never fetch an exchange, regulator, publisher, or market API directly. `DATA_MODE=live` is the default. Live mode does not fall back to mock data when a binding, provider, or field is unavailable.
 
-To introduce live sources later, add verified provider implementations and replace only the singleton composition roots in `lib/providers/index.ts`. Components and routes do not import fixture arrays directly.
+## Integrated sources
 
-Domain types live in `types/market.ts`. Shared Indian-market formatters live in `lib/format.ts`. Device-local watchlists are validated with Zod and stored under `artha-watchlist-v1`; the `WatchlistItem` model and PostgreSQL schema leave room for authenticated sync later.
+- NSE offer-document RSS is the default recurring official feed. It uses conditional requests, filters non-IPO disclosure rows, and performs capped official-host HEAD checks so a filing remains visible even when NSE has temporarily published a broken document link.
+- The public SEBI public-issue filing adapter supports DRHP, updated DRHP, RHP, corrigendum, addendum, abridged prospectus, and final documents. Recurring SEBI HTML ingestion is opt-in because the pages are not a documented API.
+- Structured IPO, GMP, market-data, JSON news, and RSS news adapters are configuration-driven. API keys stay server-side.
+- GMP remains explicitly unofficial and is stored as timestamped history. Market quotes retain REALTIME, DELAYED, EOD, or UNKNOWN timeliness.
 
-`db/postgres-schema.ts` is a PostgreSQL-ready Drizzle schema designed for Neon or Supabase. It models source attribution, companies, IPOs, events, financials, subscription records, GMP history, documents, peers, shareholding, news, indices and watchlists. The starter D1 surface is deliberately left separate because Phase 1 has no server-side persistence requirement.
+No hidden NSE/BSE endpoints, session spoofing, CAPTCHA handling, proxy rotation, or copied article bodies are used.
 
-## Development data
+## Persistence
 
-The dataset contains 12 plausible fictional/development IPO records spanning Mainboard, SME, upcoming, open, closed and listed issues. Important product surfaces label this data as not live. Mock source URLs use `example.com`; no values should be treated as market information.
+The deployed OpenAI Sites runtime uses Cloudflare D1 through the logical `DB` binding. `drizzle/0000_phase2_live_data_foundation.sql` creates the normalized model; `drizzle/0001_document_link_availability.sql` adds non-destructive document reachability state. Together they cover companies/aliases, IPO lifecycles, documents, field provenance, conflicts, manual overrides, GMP and subscription history, financials, listing performance, news, market quotes, raw records, ingestion runs/errors, and provider health.
 
-## Commands
+`db/postgres-schema.ts` is a staged PostgreSQL parity model; it is not the active deployed connection. `DATABASE_URL` is reserved for a future Worker-compatible PostgreSQL adapter.
+
+## Routes
+
+- `/` — database-driven IPO market, filings, events, news, and optional indices
+- `/ipos` — partial-record-safe IPO and filing directory
+- `/ipo/[slug]` — source-aware lifecycle detail page
+- `/calendar` — events derived from filing documents and canonical dates
+- `/compare`, `/markets`, `/news` — existing product surfaces backed by database providers
+- `/admin/data-status` — protected provider, ingestion, provenance, and override control plane
+- `/api/internal/sync` — bearer-protected ingestion endpoint (POST only)
+
+The admin route requires ChatGPT authentication and an email listed in `ADMIN_EMAILS`. With no allowlist it remains unavailable.
+
+## Configuration
+
+Copy `.env.example` to an ignored local environment file and configure only providers you are authorised to use. The minimum recurring official feed requires no key. Set a strong `CRON_SECRET` before using the internal sync endpoint.
+
+Provider-specific endpoint shapes can be adapted without changing frontend contracts. Non-`Authorization` key headers such as `X-API-KEY` are supported through the corresponding `*_API_KEY_HEADER` and `*_API_KEY_PREFIX` variables.
+
+## Scheduling
+
+The Worker exposes a scheduled handler and the deployment config requests a 15-minute trigger. Smart eligibility rules decide whether each source/IPO is due, so slow-changing records are not refreshed at the fastest cadence. Jobs are also individually callable through the `CRON_SECRET`-protected sync route; the bound scheduled handler invokes them directly without exposing that secret.
+
+## Development
 
 ```bash
 npm install
 npm run dev
 npm run lint
-npx tsc --noEmit
-npm run build
+npm run typecheck
 npm test
+npm run build
 ```
 
-Node.js 22.13 or later is required.
+Set `DATA_MODE=mock` only for explicit fixture-driven development or rendered tests. Node.js 22.13 or later is required.

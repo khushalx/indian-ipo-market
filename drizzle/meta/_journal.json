@@ -1,5 +1,20 @@
 {
   "version": "7",
   "dialect": "sqlite",
-  "entries": []
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1787141982911,
+      "tag": "0000_phase2_live_data_foundation",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1787144466401,
+      "tag": "0001_document_link_availability",
+      "breakpoints": true
+    }
+  ]
 }

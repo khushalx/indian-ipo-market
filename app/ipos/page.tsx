@@ -9,12 +9,16 @@ export const metadata: Metadata = {
 };
 
 export default async function IPOsPage() {
-  const ipos = await ipoProvider.getIPOs();
+  const result = await ipoProvider.getIPOs().then(
+    (ipos) => ({ ipos, unavailable: false }),
+    () => ({ ipos: [], unavailable: true }),
+  );
+  const { ipos, unavailable } = result;
   return (
     <main className={`site-container ${styles.page}`}>
       <header className={styles.header}>
         <div><p className="section-kicker">IPO EXPLORER</p><h1>All public issues</h1><p>Research Mainboard and SME IPOs across every stage of the issue lifecycle.</p></div>
-        <div className="mock-badge"><span /> Development data · Not live</div>
+        {unavailable ? <div className="mock-badge"><span /> Data temporarily unavailable</div> : ipos.some((ipo) => ipo.mockDisclaimer) ? <div className="mock-badge"><span /> Development data · Not live</div> : <div className="mock-badge"><span /> Official filings · Partial data supported</div>}
       </header>
       <IPOExplorer ipos={ipos} />
     </main>

@@ -7,12 +7,14 @@ import styles from "./calendar.module.css";
 
 type CalendarView = "month" | "timeline";
 type BoardFilter = "all" | IPOType;
-type EventFilter = "all" | "ipo_open" | "ipo_close" | "basis_of_allotment" | "listing" | "drhp_filed";
+type EventFilter = "all" | "ipo_open" | "ipo_close" | "basis_of_allotment" | "listing" | "drhp_filed" | "rhp_filed";
 
 interface CalendarWorkspaceProps {
   ipos: IPO[];
   events: IPOEvent[];
   initialDate?: string;
+  isMock?: boolean;
+  dataUnavailable?: boolean;
 }
 
 const relevantEventTypes = new Set<EventType>([
@@ -21,6 +23,7 @@ const relevantEventTypes = new Set<EventType>([
   "basis_of_allotment",
   "listing",
   "drhp_filed",
+  "rhp_filed",
 ]);
 
 const eventMeta: Record<EventFilter, { label: string; shortLabel: string; className: string }> = {
@@ -30,6 +33,7 @@ const eventMeta: Record<EventFilter, { label: string; shortLabel: string; classN
   basis_of_allotment: { label: "Allotment", shortLabel: "Allotment", className: styles.allotment },
   listing: { label: "Listing", shortLabel: "Listing", className: styles.listing },
   drhp_filed: { label: "DRHP filing", shortLabel: "DRHP", className: styles.drhp },
+  rhp_filed: { label: "RHP filing", shortLabel: "RHP", className: styles.drhp },
 };
 
 const boardOptions: Array<{ value: BoardFilter; label: string }> = [
@@ -45,6 +49,7 @@ const eventOptions: EventFilter[] = [
   "basis_of_allotment",
   "listing",
   "drhp_filed",
+  "rhp_filed",
 ];
 
 const dayHeadings = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
@@ -88,7 +93,7 @@ function monthSeed(events: IPOEvent[], initialDate?: string) {
   return parseDate(initialDate ?? current?.date ?? events[0]?.date ?? new Date().toISOString().slice(0, 10));
 }
 
-export default function CalendarWorkspace({ ipos, events, initialDate }: CalendarWorkspaceProps) {
+export default function CalendarWorkspace({ ipos, events, initialDate, isMock = false, dataUnavailable = false }: CalendarWorkspaceProps) {
   const [view, setView] = useState<CalendarView>("month");
   const [board, setBoard] = useState<BoardFilter>("all");
   const [eventType, setEventType] = useState<EventFilter>("all");
@@ -147,7 +152,10 @@ export default function CalendarWorkspace({ ipos, events, initialDate }: Calenda
           <h1>IPO Calendar</h1>
           <p className={styles.lede}>Every important filing, offer and listing date in one considered view.</p>
         </div>
-        <div className={styles.dataNote}><span aria-hidden="true" />Development data · Not live</div>
+        <div className={styles.dataNote}>
+          <span aria-hidden="true" />
+          {dataUnavailable ? "Data temporarily unavailable" : isMock ? "Development data · Not live" : "Database events · Source dates preserved"}
+        </div>
       </header>
 
       <section className={styles.workspace} aria-label="IPO event calendar">

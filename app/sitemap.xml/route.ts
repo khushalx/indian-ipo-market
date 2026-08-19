@@ -4,9 +4,10 @@ const staticRoutes = ["/", "/ipos", "/calendar", "/compare", "/markets", "/news"
 
 export async function GET(request: Request) {
   const origin = new URL(request.url).origin;
-  const ipos = await ipoProvider.getIPOs();
+  const ipos = await ipoProvider.getIPOs().catch(() => []);
+  const today = new Date().toISOString().slice(0, 10);
   const urls = [
-    ...staticRoutes.map((route) => ({ loc: `${origin}${route}`, priority: route === "/" ? "1.0" : "0.8", modified: "2026-08-19" })),
+    ...staticRoutes.map((route) => ({ loc: `${origin}${route}`, priority: route === "/" ? "1.0" : "0.8", modified: today })),
     ...ipos.map((ipo) => ({ loc: `${origin}/ipo/${ipo.slug}`, priority: "0.9", modified: ipo.source.lastUpdated.slice(0, 10) })),
   ];
   const body = `<?xml version="1.0" encoding="UTF-8"?>

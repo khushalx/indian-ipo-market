@@ -17,15 +17,15 @@ export class MockIPOProvider implements IPOProvider {
   async getIPOs(filters: IPOFilters = {}, sort: IPOSort = "newest"): Promise<IPO[]> {
     const query = filters.query?.trim().toLowerCase();
     const filtered = mockIPOs.filter((ipo) => {
-      const matchesQuery = !query || [ipo.company.name, ipo.company.legalName, ipo.company.industry, ipo.slug].some((value) => value.toLowerCase().includes(query));
+      const matchesQuery = !query || [ipo.company.name, ipo.company.legalName, ipo.company.industry, ipo.slug].some((value) => value?.toLowerCase().includes(query));
       const matchesYear = !filters.year || ipo.openDate?.startsWith(String(filters.year));
-      return (!filters.type || ipo.type === filters.type) && (!filters.status || ipo.status === filters.status) && (!filters.exchange || ipo.exchange.includes(filters.exchange)) && (!filters.minIssueSizeCr || ipo.issueSizeCr >= filters.minIssueSizeCr) && (!filters.maxIssueSizeCr || ipo.issueSizeCr <= filters.maxIssueSizeCr) && matchesYear && matchesQuery;
+      return (!filters.type || ipo.type === filters.type) && (!filters.status || ipo.status === filters.status) && (!filters.exchange || ipo.exchange.includes(filters.exchange)) && (!filters.minIssueSizeCr || (ipo.issueSizeCr != null && ipo.issueSizeCr >= filters.minIssueSizeCr)) && (!filters.maxIssueSizeCr || (ipo.issueSizeCr != null && ipo.issueSizeCr <= filters.maxIssueSizeCr)) && matchesYear && matchesQuery;
     });
     return [...filtered].sort((a, b) => {
-      if (sort === "issue_size") return b.issueSizeCr - a.issueSizeCr;
+      if (sort === "issue_size") return (b.issueSizeCr ?? -Infinity) - (a.issueSizeCr ?? -Infinity);
       if (sort === "subscription") return (b.subscriptionTotal ?? -1) - (a.subscriptionTotal ?? -1);
       if (sort === "listing_gain") return (b.listingGainPercent ?? -Infinity) - (a.listingGainPercent ?? -Infinity);
-      if (sort === "gmp_percent") return ((b.gmp ?? -Infinity) / b.priceBandMax) - ((a.gmp ?? -Infinity) / a.priceBandMax);
+      if (sort === "gmp_percent") return (b.gmp != null && b.priceBandMax ? b.gmp / b.priceBandMax : -Infinity) - (a.gmp != null && a.priceBandMax ? a.gmp / a.priceBandMax : -Infinity);
       return newestFirst(a, b);
     });
   }

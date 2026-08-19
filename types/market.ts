@@ -3,17 +3,33 @@
  * so mock providers can be replaced with verified market-data integrations.
  */
 
-export type IPOType = "mainboard" | "sme";
-export type IPOStatus = "upcoming" | "open" | "closed" | "listed" | "withdrawn";
+export type DataMode = "live" | "mock";
+export type IPOType = "mainboard" | "sme" | "unknown";
+export type IPOStatus =
+  | "drhp_filed"
+  | "rhp_filed"
+  | "upcoming"
+  | "open"
+  | "closed"
+  | "allotment_pending"
+  | "allotment_complete"
+  | "listing_upcoming"
+  | "listed"
+  | "withdrawn"
+  | "deferred";
 export type Exchange = "NSE" | "BSE" | "NSE_EMERGE" | "BSE_SME";
 export type EventType =
   | "drhp_filed"
+  | "updated_drhp_filed"
   | "sebi_observation"
   | "rhp_filed"
+  | "corrigendum_filed"
+  | "addendum_filed"
   | "anchor_allocation"
   | "ipo_open"
   | "ipo_close"
   | "basis_of_allotment"
+  | "refund"
   | "demat_credit"
   | "listing";
 export type EventState = "completed" | "current" | "upcoming";
@@ -24,16 +40,40 @@ export type SourceType =
   | "offer_document"
   | "issuer"
   | "third_party"
-  | "editorial";
+  | "editorial"
+  | "manual"
+  | "derived";
 export type DocumentType =
   | "drhp"
+  | "updated_drhp"
   | "rhp"
+  | "abridged_prospectus"
+  | "corrigendum"
+  | "addendum"
+  | "prospectus"
   | "final_offer_document"
   | "anchor_allocation"
   | "basis_of_allotment"
   | "annual_report"
   | "other";
-export type NewsCategory = "ipo" | "markets" | "results" | "regulation" | "listing";
+export type DocumentAvailability =
+  | "unchecked"
+  | "available"
+  | "not_found"
+  | "unknown";
+export type NewsCategory =
+  | "ipo"
+  | "markets"
+  | "company"
+  | "sebi"
+  | "rbi"
+  | "economy"
+  | "results"
+  | "corporate_actions"
+  | "regulation"
+  | "listing";
+export type QuoteTimeliness = "REALTIME" | "DELAYED" | "EOD" | "UNKNOWN";
+export type FreshnessState = "fresh" | "recent" | "delayed" | "stale" | "unknown";
 
 export interface Source {
   id: string;
@@ -41,7 +81,19 @@ export interface Source {
   sourceUrl: string;
   sourceType: SourceType;
   lastUpdated: string;
+  fetchedAt?: string;
+  verifiedAt?: string;
   isOfficial?: boolean;
+  confidence?: number;
+}
+
+export interface FieldProvenance {
+  fieldName: string;
+  source: Source;
+  priority: number;
+  fetchedAt: string;
+  verifiedAt?: string;
+  confidence?: number;
 }
 
 export interface IPORegistrar {
@@ -58,12 +110,12 @@ export interface Company {
   name: string;
   legalName: string;
   slug: string;
-  industry: string;
-  sector: string;
-  foundedYear: number;
-  headquarters: string;
+  industry?: string;
+  sector?: string;
+  foundedYear?: number;
+  headquarters?: string;
   website?: string;
-  overview: string;
+  overview?: string;
   promoters: string[];
   managingDirector?: string;
   keyProducts: string[];
@@ -74,8 +126,8 @@ export interface Company {
 
 export interface IPOUseOfProceeds {
   label: string;
-  amountCr: number;
-  percentage: number;
+  amountCr?: number;
+  percentage?: number;
 }
 
 export interface IPO {
@@ -86,25 +138,26 @@ export interface IPO {
   type: IPOType;
   exchange: Exchange[];
   status: IPOStatus;
-  faceValue: number;
-  priceBandMin: number;
-  priceBandMax: number;
-  lotSize: number;
-  issueSizeCr: number;
-  freshIssueCr: number;
-  offerForSaleCr: number;
+  faceValue?: number;
+  priceBandMin?: number;
+  priceBandMax?: number;
+  lotSize?: number;
+  issueSizeCr?: number;
+  freshIssueCr?: number;
+  offerForSaleCr?: number;
   employeeReservationCr?: number;
   shareholderReservationCr?: number;
   openDate?: string;
   closeDate?: string;
   allotmentDate?: string;
   dematDate?: string;
+  refundDate?: string;
   listingDate?: string;
   listingPrice?: number;
   issuePrice?: number;
   estimatedListingPrice?: number;
   listingGainPercent?: number;
-  registrar: IPORegistrar;
+  registrar?: IPORegistrar;
   leadManagers: string[];
   gmp?: number;
   gmpUpdatedAt?: string;
@@ -117,8 +170,16 @@ export interface IPO {
   priceToBook?: number;
   evToEbitda?: number;
   source: Source;
+  fieldSources?: FieldProvenance[];
   useOfProceeds?: IPOUseOfProceeds[];
-  mockDisclaimer: true;
+  fetchedAt?: string;
+  updatedAt?: string;
+  dataMode?: DataMode;
+  mockDisclaimer: boolean;
+  latestFilingDate?: string;
+  latestFilingType?: DocumentType;
+  latestDocumentUrl?: string;
+  latestDocumentAvailability?: DocumentAvailability;
 }
 
 export interface IPOEvent {
@@ -135,7 +196,7 @@ export interface IPOEvent {
 export interface IPOFinancial {
   id: string;
   ipoId: string;
-  fiscalYear: "FY22" | "FY23" | "FY24" | "FY25";
+  fiscalYear: string;
   revenueCr?: number;
   revenueGrowthPercent?: number;
   ebitdaCr?: number;
@@ -168,6 +229,7 @@ export interface IPOSubscription {
   shareholder?: number;
   total: number;
   source: Source;
+  fetchedAt?: string;
 }
 
 export interface IPOGMPRecord {
@@ -178,6 +240,7 @@ export interface IPOGMPRecord {
   estimatedListingPrice?: number;
   gmpPercent?: number;
   source: Source;
+  fetchedAt?: string;
 }
 
 export interface IPODocument {
@@ -187,6 +250,9 @@ export interface IPODocument {
   title: string;
   publishedAt: string;
   url: string;
+  availability: DocumentAvailability;
+  checkedAt?: string;
+  httpStatus?: number;
   source: Source;
 }
 
@@ -221,6 +287,7 @@ export interface NewsArticle {
   ipoId?: string;
   publishedAt: string;
   source: Source;
+  url?: string;
   imageUrl?: string;
 }
 
@@ -232,7 +299,18 @@ export interface MarketIndex {
   changePercent: number;
   asOf: string;
   source: Source;
-  mockDisclaimer: true;
+  timeliness?: QuoteTimeliness;
+  delayMinutes?: number;
+  mockDisclaimer: boolean;
+}
+
+export interface ProviderStatus {
+  provider: "SEBI" | "IPO API" | "GMP" | "News" | "Market Data" | string;
+  status: "healthy" | "degraded" | "offline" | "unconfigured";
+  lastSuccessfulFetch?: string;
+  lastError?: string;
+  recordsSynced: number;
+  updatedAt: string;
 }
 
 export interface WatchlistItem {

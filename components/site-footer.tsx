@@ -6,7 +6,7 @@ export function SiteFooter() {
     <footer className={styles.footer}>
       <div className={`site-container ${styles.disclaimer}`}>
         <strong>Important information</strong>
-        <p>Market data is provided for informational purposes only and does not constitute investment advice. Grey Market Premium is unofficial market information and does not guarantee listing performance. Phase 1 values are clearly marked development data.</p>
+        <p>Market data is provided for informational purposes only and does not constitute investment advice. Grey Market Premium is unofficial market information and does not guarantee listing performance. Source and freshness labels describe the data actually available.</p>
       </div>
       <div className={`site-container ${styles.bottom}`}>
         <Link href="/" className={styles.brand}><span>अ</span> ARTHA IPO</Link>

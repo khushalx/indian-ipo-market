@@ -1,7 +1,8 @@
 import { ArrowUpRight, Info } from "lucide-react";
 import type { ReactNode } from "react";
 import type { Source } from "@/types";
-import { formatDate, formatDateTime } from "./format";
+import { relativeUpdatedAt } from "@/lib/ingestion/freshness";
+import { formatDateTime } from "./format";
 import styles from "./ipo-detail.module.css";
 
 type SectionHeadingProps = {
@@ -69,11 +70,12 @@ export function SourceLine({
       ) : (
         <span>{source?.sourceName ?? "Provider"}</span>
       )}
+      {source ? <span>{" "}· {source.isOfficial ? "Official" : "Unofficial"}</span> : null}
       {(updatedAt ?? source?.lastUpdated) ? (
         <span>
-          {" "}· Updated{" "}
+          {" "}·{" "}
           {compact
-            ? formatDate(updatedAt ?? source?.lastUpdated)
+            ? relativeUpdatedAt(updatedAt ?? source?.lastUpdated)
             : formatDateTime(updatedAt ?? source?.lastUpdated)}
         </span>
       ) : null}

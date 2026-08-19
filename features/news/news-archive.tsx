@@ -8,10 +8,10 @@ import type { IPO, NewsArticle, NewsCategory } from "@/types";
 import styles from "./news-archive.module.css";
 
 const categories: Array<{ value: "all" | NewsCategory; label: string }> = [
-  { value: "all", label: "All" }, { value: "ipo", label: "IPO" }, { value: "listing", label: "Listings" }, { value: "regulation", label: "Regulation" }, { value: "markets", label: "Markets" }, { value: "results", label: "Results" },
+  { value: "all", label: "All" }, { value: "ipo", label: "IPO" }, { value: "sebi", label: "SEBI" }, { value: "company", label: "Company" }, { value: "listing", label: "Listings" }, { value: "regulation", label: "Regulation" }, { value: "markets", label: "Markets" }, { value: "results", label: "Results" },
 ];
 
-export function NewsArchive({ articles, ipos }: { articles: NewsArticle[]; ipos: IPO[] }) {
+export function NewsArchive({ articles, ipos, unavailable = false }: { articles: NewsArticle[]; ipos: IPO[]; unavailable?: boolean }) {
   const [category, setCategory] = useState<"all" | NewsCategory>("all");
   const [query, setQuery] = useState("");
   const visible = useMemo(() => articles.filter((item) => (category === "all" || item.category === category) && `${item.headline} ${item.summary}`.toLowerCase().includes(query.toLowerCase())), [articles, category, query]);
@@ -30,11 +30,11 @@ export function NewsArchive({ articles, ipos }: { articles: NewsArticle[]; ipos:
         {visible.length ? visible.map((item, index) => (
           <article key={item.id} className={index === 0 ? styles.lead : undefined}>
             <div><span>{item.category}</span><time>{formatDate(item.publishedAt, "medium")}</time></div>
-            <Link href={routeFor(item)}>{item.headline}</Link>
+            {item.url ? <a href={item.url} target="_blank" rel="noreferrer">{item.headline}</a> : <Link href={routeFor(item)}>{item.headline}</Link>}
             <p>{item.summary}</p>
-            <small>{item.source.sourceName} · Development article</small>
+            <small>{item.source.sourceName} · {item.source.isOfficial ? "Official source" : "Original publisher"}</small>
           </article>
-        )) : <div className={styles.empty}><h2>No news found</h2><p>Try another category or a shorter search.</p></div>}
+        )) : <div className={styles.empty}><h2>{unavailable ? "Data temporarily unavailable" : "No news found"}</h2><p>{unavailable ? "The news store could not be read. No development articles have been substituted." : "Try another category or a shorter search."}</p></div>}
       </div>
     </div>
   );

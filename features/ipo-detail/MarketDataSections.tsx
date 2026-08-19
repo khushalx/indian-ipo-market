@@ -125,7 +125,7 @@ export function GMPSection({ ipo, gmpHistory }: Pick<DetailDataProps, "ipo" | "g
   const estimated =
     currentRecord?.estimatedListingPrice ??
     ipo.estimatedListingPrice ??
-    (current == null ? undefined : ipo.priceBandMax + current);
+    (current == null || ipo.priceBandMax == null ? undefined : ipo.priceBandMax + current);
   const values = records.map((record) => record.gmp);
   const first = records[0]?.gmp;
   const change = current == null || first == null ? undefined : current - first;

@@ -1,0 +1,4105 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "e21b785a-8e03-418a-ad63-c7b1b74c10e1",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "tables": {
+    "companies": {
+      "name": "companies",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "display_name": {
+          "name": "display_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "legal_name": {
+          "name": "legal_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "normalized_name": {
+          "name": "normalized_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "cin": {
+          "name": "cin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "isin": {
+          "name": "isin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "sector": {
+          "name": "sector",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "industry": {
+          "name": "industry",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "website_url": {
+          "name": "website_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "headquarters": {
+          "name": "headquarters",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "summary": {
+          "name": "summary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "first_seen_at": {
+          "name": "first_seen_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "last_seen_at": {
+          "name": "last_seen_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "uq_companies_slug": {
+          "name": "uq_companies_slug",
+          "columns": [
+            "slug"
+          ],
+          "isUnique": true
+        },
+        "uq_companies_cin": {
+          "name": "uq_companies_cin",
+          "columns": [
+            "cin"
+          ],
+          "isUnique": true,
+          "where": "\"companies\".\"cin\" IS NOT NULL"
+        },
+        "uq_companies_isin": {
+          "name": "uq_companies_isin",
+          "columns": [
+            "isin"
+          ],
+          "isUnique": true,
+          "where": "\"companies\".\"isin\" IS NOT NULL"
+        },
+        "idx_companies_normalized_name": {
+          "name": "idx_companies_normalized_name",
+          "columns": [
+            "normalized_name"
+          ],
+          "isUnique": false
+        },
+        "idx_companies_sector": {
+          "name": "idx_companies_sector",
+          "columns": [
+            "sector"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "company_aliases": {
+      "name": "company_aliases",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "company_id": {
+          "name": "company_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "external_name": {
+          "name": "external_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "normalized_name": {
+          "name": "normalized_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "external_id": {
+          "name": "external_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_verified": {
+          "name": "is_verified",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "uq_company_aliases_source_name": {
+          "name": "uq_company_aliases_source_name",
+          "columns": [
+            "source_id",
+            "normalized_name"
+          ],
+          "isUnique": true
+        },
+        "uq_company_aliases_source_external_id": {
+          "name": "uq_company_aliases_source_external_id",
+          "columns": [
+            "source_id",
+            "external_id"
+          ],
+          "isUnique": true,
+          "where": "\"company_aliases\".\"external_id\" IS NOT NULL"
+        },
+        "idx_company_aliases_company": {
+          "name": "idx_company_aliases_company",
+          "columns": [
+            "company_id"
+          ],
+          "isUnique": false
+        },
+        "idx_company_aliases_normalized_name": {
+          "name": "idx_company_aliases_normalized_name",
+          "columns": [
+            "normalized_name"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "company_aliases_company_id_companies_id_fk": {
+          "name": "company_aliases_company_id_companies_id_fk",
+          "tableFrom": "company_aliases",
+          "tableTo": "companies",
+          "columnsFrom": [
+            "company_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "company_aliases_source_id_data_sources_id_fk": {
+          "name": "company_aliases_source_id_data_sources_id_fk",
+          "tableFrom": "company_aliases",
+          "tableTo": "data_sources",
+          "columnsFrom": [
+            "source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "data_conflicts": {
+      "name": "data_conflicts",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "entity_type": {
+          "name": "entity_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "entity_id": {
+          "name": "entity_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ipo_id": {
+          "name": "ipo_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "field_name": {
+          "name": "field_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "preferred_field_source_id": {
+          "name": "preferred_field_source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "challenger_field_source_id": {
+          "name": "challenger_field_source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "preferred_source_id": {
+          "name": "preferred_source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "challenger_source_id": {
+          "name": "challenger_source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "preferred_value": {
+          "name": "preferred_value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "challenger_value": {
+          "name": "challenger_value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'OPEN'"
+        },
+        "resolution_reason": {
+          "name": "resolution_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "resolved_by": {
+          "name": "resolved_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "resolved_at": {
+          "name": "resolved_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "idx_data_conflicts_open": {
+          "name": "idx_data_conflicts_open",
+          "columns": [
+            "status",
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "idx_data_conflicts_entity_field": {
+          "name": "idx_data_conflicts_entity_field",
+          "columns": [
+            "entity_type",
+            "entity_id",
+            "field_name"
+          ],
+          "isUnique": false
+        },
+        "idx_data_conflicts_ipo": {
+          "name": "idx_data_conflicts_ipo",
+          "columns": [
+            "ipo_id",
+            "status"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "data_conflicts_ipo_id_ipos_id_fk": {
+          "name": "data_conflicts_ipo_id_ipos_id_fk",
+          "tableFrom": "data_conflicts",
+          "tableTo": "ipos",
+          "columnsFrom": [
+            "ipo_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "data_conflicts_preferred_field_source_id_ipo_field_sources_id_fk": {
+          "name": "data_conflicts_preferred_field_source_id_ipo_field_sources_id_fk",
+          "tableFrom": "data_conflicts",
+          "tableTo": "ipo_field_sources",
+          "columnsFrom": [
+            "preferred_field_source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "data_conflicts_challenger_field_source_id_ipo_field_sources_id_fk": {
+          "name": "data_conflicts_challenger_field_source_id_ipo_field_sources_id_fk",
+          "tableFrom": "data_conflicts",
+          "tableTo": "ipo_field_sources",
+          "columnsFrom": [
+            "challenger_field_source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "data_conflicts_preferred_source_id_data_sources_id_fk": {
+          "name": "data_conflicts_preferred_source_id_data_sources_id_fk",
+          "tableFrom": "data_conflicts",
+          "tableTo": "data_sources",
+          "columnsFrom": [
+            "preferred_source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "data_conflicts_challenger_source_id_data_sources_id_fk": {
+          "name": "data_conflicts_challenger_source_id_data_sources_id_fk",
+          "tableFrom": "data_conflicts",
+          "tableTo": "data_sources",
+          "columnsFrom": [
+            "challenger_source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "data_sources": {
+      "name": "data_sources",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "key": {
+          "name": "key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_kind": {
+          "name": "source_kind",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "authority_level": {
+          "name": "authority_level",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "attribution_label": {
+          "name": "attribution_label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "homepage_url": {
+          "name": "homepage_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "base_url": {
+          "name": "base_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "terms_url": {
+          "name": "terms_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_official": {
+          "name": "is_official",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
+        "metadata_json": {
+          "name": "metadata_json",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "last_fetched_at": {
+          "name": "last_fetched_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "last_successful_at": {
+          "name": "last_successful_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "uq_data_sources_key": {
+          "name": "uq_data_sources_key",
+          "columns": [
+            "key"
+          ],
+          "isUnique": true
+        },
+        "idx_data_sources_kind_active": {
+          "name": "idx_data_sources_kind_active",
+          "columns": [
+            "source_kind",
+            "is_active"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "ck_data_sources_official_authority": {
+          "name": "ck_data_sources_official_authority",
+          "value": "\"data_sources\".\"is_official\" = 0 OR \"data_sources\".\"authority_level\" = 'OFFICIAL'"
+        }
+      }
+    },
+    "ingestion_errors": {
+      "name": "ingestion_errors",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ingestion_run_id": {
+          "name": "ingestion_run_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "raw_record_id": {
+          "name": "raw_record_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "operation": {
+          "name": "operation",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "entity_type": {
+          "name": "entity_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "entity_id": {
+          "name": "entity_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "raw_identifier": {
+          "name": "raw_identifier",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "error_code": {
+          "name": "error_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "error_message": {
+          "name": "error_message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "context_json": {
+          "name": "context_json",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_retryable": {
+          "name": "is_retryable",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "retry_count": {
+          "name": "retry_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "resolved_at": {
+          "name": "resolved_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "idx_ingestion_errors_run": {
+          "name": "idx_ingestion_errors_run",
+          "columns": [
+            "ingestion_run_id",
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "idx_ingestion_errors_source_created": {
+          "name": "idx_ingestion_errors_source_created",
+          "columns": [
+            "source_id",
+            "created_at"
+          ],
+          "isUnique": false
+        },
+        "idx_ingestion_errors_unresolved": {
+          "name": "idx_ingestion_errors_unresolved",
+          "columns": [
+            "resolved_at",
+            "created_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "ingestion_errors_ingestion_run_id_ingestion_runs_id_fk": {
+          "name": "ingestion_errors_ingestion_run_id_ingestion_runs_id_fk",
+          "tableFrom": "ingestion_errors",
+          "tableTo": "ingestion_runs",
+          "columnsFrom": [
+            "ingestion_run_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "ingestion_errors_source_id_data_sources_id_fk": {
+          "name": "ingestion_errors_source_id_data_sources_id_fk",
+          "tableFrom": "ingestion_errors",
+          "tableTo": "data_sources",
+          "columnsFrom": [
+            "source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "ingestion_errors_raw_record_id_raw_provider_records_id_fk": {
+          "name": "ingestion_errors_raw_record_id_raw_provider_records_id_fk",
+          "tableFrom": "ingestion_errors",
+          "tableTo": "raw_provider_records",
+          "columnsFrom": [
+            "raw_record_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "ck_ingestion_errors_retry_count": {
+          "name": "ck_ingestion_errors_retry_count",
+          "value": "\"ingestion_errors\".\"retry_count\" >= 0"
+        }
+      }
+    },
+    "ingestion_runs": {
+      "name": "ingestion_runs",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "provider_key": {
+          "name": "provider_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "job_type": {
+          "name": "job_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "trigger": {
+          "name": "trigger",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'RUNNING'"
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "finished_at": {
+          "name": "finished_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "records_fetched": {
+          "name": "records_fetched",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "records_created": {
+          "name": "records_created",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "records_updated": {
+          "name": "records_updated",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "records_skipped": {
+          "name": "records_skipped",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "error_count": {
+          "name": "error_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "error_summary": {
+          "name": "error_summary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "metadata_json": {
+          "name": "metadata_json",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "idx_ingestion_runs_provider_started": {
+          "name": "idx_ingestion_runs_provider_started",
+          "columns": [
+            "provider_key",
+            "started_at"
+          ],
+          "isUnique": false
+        },
+        "idx_ingestion_runs_status_started": {
+          "name": "idx_ingestion_runs_status_started",
+          "columns": [
+            "status",
+            "started_at"
+          ],
+          "isUnique": false
+        },
+        "idx_ingestion_runs_source_started": {
+          "name": "idx_ingestion_runs_source_started",
+          "columns": [
+            "source_id",
+            "started_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "ingestion_runs_source_id_data_sources_id_fk": {
+          "name": "ingestion_runs_source_id_data_sources_id_fk",
+          "tableFrom": "ingestion_runs",
+          "tableTo": "data_sources",
+          "columnsFrom": [
+            "source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "ck_ingestion_runs_counts_nonnegative": {
+          "name": "ck_ingestion_runs_counts_nonnegative",
+          "value": "\"ingestion_runs\".\"records_fetched\" >= 0 AND \"ingestion_runs\".\"records_created\" >= 0 AND \"ingestion_runs\".\"records_updated\" >= 0 AND \"ingestion_runs\".\"records_skipped\" >= 0 AND \"ingestion_runs\".\"error_count\" >= 0"
+        }
+      }
+    },
+    "ipo_documents": {
+      "name": "ipo_documents",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ipo_id": {
+          "name": "ipo_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ingestion_run_id": {
+          "name": "ingestion_run_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "raw_record_id": {
+          "name": "raw_record_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "document_type": {
+          "name": "document_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "external_id": {
+          "name": "external_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "title": {
+          "name": "title",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "filing_date": {
+          "name": "filing_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "document_url": {
+          "name": "document_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_url": {
+          "name": "source_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "content_hash": {
+          "name": "content_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "version_label": {
+          "name": "version_label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_current": {
+          "name": "is_current",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
+        "fetched_at": {
+          "name": "fetched_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "uq_ipo_documents_filing_identity": {
+          "name": "uq_ipo_documents_filing_identity",
+          "columns": [
+            "source_id",
+            "ipo_id",
+            "document_type",
+            "document_url",
+            "filing_date"
+          ],
+          "isUnique": true
+        },
+        "idx_ipo_documents_ipo_type_date": {
+          "name": "idx_ipo_documents_ipo_type_date",
+          "columns": [
+            "ipo_id",
+            "document_type",
+            "filing_date"
+          ],
+          "isUnique": false
+        },
+        "idx_ipo_documents_source_filing_date": {
+          "name": "idx_ipo_documents_source_filing_date",
+          "columns": [
+            "source_id",
+            "filing_date"
+          ],
+          "isUnique": false
+        },
+        "idx_ipo_documents_current": {
+          "name": "idx_ipo_documents_current",
+          "columns": [
+            "ipo_id",
+            "is_current"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "ipo_documents_ipo_id_ipos_id_fk": {
+          "name": "ipo_documents_ipo_id_ipos_id_fk",
+          "tableFrom": "ipo_documents",
+          "tableTo": "ipos",
+          "columnsFrom": [
+            "ipo_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "ipo_documents_source_id_data_sources_id_fk": {
+          "name": "ipo_documents_source_id_data_sources_id_fk",
+          "tableFrom": "ipo_documents",
+          "tableTo": "data_sources",
+          "columnsFrom": [
+            "source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "ipo_documents_ingestion_run_id_ingestion_runs_id_fk": {
+          "name": "ipo_documents_ingestion_run_id_ingestion_runs_id_fk",
+          "tableFrom": "ipo_documents",
+          "tableTo": "ingestion_runs",
+          "columnsFrom": [
+            "ingestion_run_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "ipo_documents_raw_record_id_raw_provider_records_id_fk": {
+          "name": "ipo_documents_raw_record_id_raw_provider_records_id_fk",
+          "tableFrom": "ipo_documents",
+          "tableTo": "raw_provider_records",
+          "columnsFrom": [
+            "raw_record_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "ipo_external_identifiers": {
+      "name": "ipo_external_identifiers",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ipo_id": {
+          "name": "ipo_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "identifier_type": {
+          "name": "identifier_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "external_id": {
+          "name": "external_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "exchange": {
+          "name": "exchange",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "first_seen_at": {
+          "name": "first_seen_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "last_seen_at": {
+          "name": "last_seen_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "uq_ipo_external_identifiers_source_value": {
+          "name": "uq_ipo_external_identifiers_source_value",
+          "columns": [
+            "source_id",
+            "identifier_type",
+            "external_id"
+          ],
+          "isUnique": true
+        },
+        "idx_ipo_external_identifiers_ipo": {
+          "name": "idx_ipo_external_identifiers_ipo",
+          "columns": [
+            "ipo_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "ipo_external_identifiers_ipo_id_ipos_id_fk": {
+          "name": "ipo_external_identifiers_ipo_id_ipos_id_fk",
+          "tableFrom": "ipo_external_identifiers",
+          "tableTo": "ipos",
+          "columnsFrom": [
+            "ipo_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "ipo_external_identifiers_source_id_data_sources_id_fk": {
+          "name": "ipo_external_identifiers_source_id_data_sources_id_fk",
+          "tableFrom": "ipo_external_identifiers",
+          "tableTo": "data_sources",
+          "columnsFrom": [
+            "source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "ipo_field_sources": {
+      "name": "ipo_field_sources",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ipo_id": {
+          "name": "ipo_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "field_name": {
+          "name": "field_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "value_type": {
+          "name": "value_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ingestion_run_id": {
+          "name": "ingestion_run_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "raw_record_id": {
+          "name": "raw_record_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "source_url": {
+          "name": "source_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "raw_value": {
+          "name": "raw_value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "normalized_value": {
+          "name": "normalized_value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "priority": {
+          "name": "priority",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "confidence": {
+          "name": "confidence",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "observed_at": {
+          "name": "observed_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "fetched_at": {
+          "name": "fetched_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "verified_at": {
+          "name": "verified_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_selected": {
+          "name": "is_selected",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "superseded_at": {
+          "name": "superseded_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "uq_ipo_field_sources_selected": {
+          "name": "uq_ipo_field_sources_selected",
+          "columns": [
+            "ipo_id",
+            "field_name"
+          ],
+          "isUnique": true,
+          "where": "\"ipo_field_sources\".\"is_selected\" = 1 AND \"ipo_field_sources\".\"superseded_at\" IS NULL"
+        },
+        "idx_ipo_field_sources_ipo_field_priority": {
+          "name": "idx_ipo_field_sources_ipo_field_priority",
+          "columns": [
+            "ipo_id",
+            "field_name",
+            "priority"
+          ],
+          "isUnique": false
+        },
+        "idx_ipo_field_sources_source_fetched": {
+          "name": "idx_ipo_field_sources_source_fetched",
+          "columns": [
+            "source_id",
+            "fetched_at"
+          ],
+          "isUnique": false
+        },
+        "idx_ipo_field_sources_raw_record": {
+          "name": "idx_ipo_field_sources_raw_record",
+          "columns": [
+            "raw_record_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "ipo_field_sources_ipo_id_ipos_id_fk": {
+          "name": "ipo_field_sources_ipo_id_ipos_id_fk",
+          "tableFrom": "ipo_field_sources",
+          "tableTo": "ipos",
+          "columnsFrom": [
+            "ipo_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "ipo_field_sources_source_id_data_sources_id_fk": {
+          "name": "ipo_field_sources_source_id_data_sources_id_fk",
+          "tableFrom": "ipo_field_sources",
+          "tableTo": "data_sources",
+          "columnsFrom": [
+            "source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "ipo_field_sources_ingestion_run_id_ingestion_runs_id_fk": {
+          "name": "ipo_field_sources_ingestion_run_id_ingestion_runs_id_fk",
+          "tableFrom": "ipo_field_sources",
+          "tableTo": "ingestion_runs",
+          "columnsFrom": [
+            "ingestion_run_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "ipo_field_sources_raw_record_id_raw_provider_records_id_fk": {
+          "name": "ipo_field_sources_raw_record_id_raw_provider_records_id_fk",
+          "tableFrom": "ipo_field_sources",
+          "tableTo": "raw_provider_records",
+          "columnsFrom": [
+            "raw_record_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "ck_ipo_field_sources_confidence": {
+          "name": "ck_ipo_field_sources_confidence",
+          "value": "\"ipo_field_sources\".\"confidence\" IS NULL OR (\"ipo_field_sources\".\"confidence\" >= 0 AND \"ipo_field_sources\".\"confidence\" <= 100)"
+        }
+      }
+    },
+    "ipo_financials": {
+      "name": "ipo_financials",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ipo_id": {
+          "name": "ipo_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "document_id": {
+          "name": "document_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "fiscal_period": {
+          "name": "fiscal_period",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "period_type": {
+          "name": "period_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "period_start": {
+          "name": "period_start",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "period_end": {
+          "name": "period_end",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "currency": {
+          "name": "currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'INR'"
+        },
+        "unit": {
+          "name": "unit",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'CRORE'"
+        },
+        "revenue": {
+          "name": "revenue",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "ebitda": {
+          "name": "ebitda",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "pat": {
+          "name": "pat",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "total_assets": {
+          "name": "total_assets",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "net_worth": {
+          "name": "net_worth",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "total_debt": {
+          "name": "total_debt",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "operating_cash_flow": {
+          "name": "operating_cash_flow",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "is_audited": {
+          "name": "is_audited",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "verified_at": {
+          "name": "verified_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "uq_ipo_financials_period": {
+          "name": "uq_ipo_financials_period",
+          "columns": [
+            "ipo_id",
+            "fiscal_period",
+            "period_type"
+          ],
+          "isUnique": true
+        },
+        "idx_ipo_financials_source": {
+          "name": "idx_ipo_financials_source",
+          "columns": [
+            "source_id"
+          ],
+          "isUnique": false
+        },
+        "idx_ipo_financials_document": {
+          "name": "idx_ipo_financials_document",
+          "columns": [
+            "document_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "ipo_financials_ipo_id_ipos_id_fk": {
+          "name": "ipo_financials_ipo_id_ipos_id_fk",
+          "tableFrom": "ipo_financials",
+          "tableTo": "ipos",
+          "columnsFrom": [
+            "ipo_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "ipo_financials_source_id_data_sources_id_fk": {
+          "name": "ipo_financials_source_id_data_sources_id_fk",
+          "tableFrom": "ipo_financials",
+          "tableTo": "data_sources",
+          "columnsFrom": [
+            "source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "ipo_financials_document_id_ipo_documents_id_fk": {
+          "name": "ipo_financials_document_id_ipo_documents_id_fk",
+          "tableFrom": "ipo_financials",
+          "tableTo": "ipo_documents",
+          "columnsFrom": [
+            "document_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "ck_ipo_financials_currency_inr": {
+          "name": "ck_ipo_financials_currency_inr",
+          "value": "\"ipo_financials\".\"currency\" = 'INR'"
+        }
+      }
+    },
+    "ipo_gmp_history": {
+      "name": "ipo_gmp_history",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ipo_id": {
+          "name": "ipo_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ingestion_run_id": {
+          "name": "ingestion_run_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "raw_record_id": {
+          "name": "raw_record_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "source_record_key": {
+          "name": "source_record_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "gmp": {
+          "name": "gmp",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "upper_price_band": {
+          "name": "upper_price_band",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "estimated_listing_price": {
+          "name": "estimated_listing_price",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "gmp_percent": {
+          "name": "gmp_percent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "source_url": {
+          "name": "source_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "observed_at": {
+          "name": "observed_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "fetched_at": {
+          "name": "fetched_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "is_valid": {
+          "name": "is_valid",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
+        "invalid_reason": {
+          "name": "invalid_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "uq_ipo_gmp_history_source_record": {
+          "name": "uq_ipo_gmp_history_source_record",
+          "columns": [
+            "source_id",
+            "source_record_key"
+          ],
+          "isUnique": true,
+          "where": "\"ipo_gmp_history\".\"source_record_key\" IS NOT NULL"
+        },
+        "uq_ipo_gmp_history_observation": {
+          "name": "uq_ipo_gmp_history_observation",
+          "columns": [
+            "ipo_id",
+            "source_id",
+            "observed_at"
+          ],
+          "isUnique": true
+        },
+        "idx_ipo_gmp_history_latest": {
+          "name": "idx_ipo_gmp_history_latest",
+          "columns": [
+            "ipo_id",
+            "is_valid",
+            "observed_at"
+          ],
+          "isUnique": false
+        },
+        "idx_ipo_gmp_history_run": {
+          "name": "idx_ipo_gmp_history_run",
+          "columns": [
+            "ingestion_run_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "ipo_gmp_history_ipo_id_ipos_id_fk": {
+          "name": "ipo_gmp_history_ipo_id_ipos_id_fk",
+          "tableFrom": "ipo_gmp_history",
+          "tableTo": "ipos",
+          "columnsFrom": [
+            "ipo_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "ipo_gmp_history_source_id_data_sources_id_fk": {
+          "name": "ipo_gmp_history_source_id_data_sources_id_fk",
+          "tableFrom": "ipo_gmp_history",
+          "tableTo": "data_sources",
+          "columnsFrom": [
+            "source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "ipo_gmp_history_ingestion_run_id_ingestion_runs_id_fk": {
+          "name": "ipo_gmp_history_ingestion_run_id_ingestion_runs_id_fk",
+          "tableFrom": "ipo_gmp_history",
+          "tableTo": "ingestion_runs",
+          "columnsFrom": [
+            "ingestion_run_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "ipo_gmp_history_raw_record_id_raw_provider_records_id_fk": {
+          "name": "ipo_gmp_history_raw_record_id_raw_provider_records_id_fk",
+          "tableFrom": "ipo_gmp_history",
+          "tableTo": "raw_provider_records",
+          "columnsFrom": [
+            "raw_record_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "ck_ipo_gmp_history_upper_band_nonnegative": {
+          "name": "ck_ipo_gmp_history_upper_band_nonnegative",
+          "value": "\"ipo_gmp_history\".\"upper_price_band\" IS NULL OR CAST(\"ipo_gmp_history\".\"upper_price_band\" AS NUMERIC) >= 0"
+        }
+      }
+    },
+    "ipo_listing_performance": {
+      "name": "ipo_listing_performance",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ipo_id": {
+          "name": "ipo_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ingestion_run_id": {
+          "name": "ingestion_run_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "listing_date": {
+          "name": "listing_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "issue_price": {
+          "name": "issue_price",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "listing_open": {
+          "name": "listing_open",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "listing_high": {
+          "name": "listing_high",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "listing_low": {
+          "name": "listing_low",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "listing_close": {
+          "name": "listing_close",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "current_price": {
+          "name": "current_price",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "listing_gain_percent": {
+          "name": "listing_gain_percent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "listing_close_gain_percent": {
+          "name": "listing_close_gain_percent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "current_return_from_issue": {
+          "name": "current_return_from_issue",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "return_1d": {
+          "name": "return_1d",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "return_1w": {
+          "name": "return_1w",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "return_1m": {
+          "name": "return_1m",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "return_3m": {
+          "name": "return_3m",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "return_6m": {
+          "name": "return_6m",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "return_1y": {
+          "name": "return_1y",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "quote_mode": {
+          "name": "quote_mode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'UNKNOWN'"
+        },
+        "delay_minutes": {
+          "name": "delay_minutes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "observed_at": {
+          "name": "observed_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "fetched_at": {
+          "name": "fetched_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "uq_ipo_listing_performance_observation": {
+          "name": "uq_ipo_listing_performance_observation",
+          "columns": [
+            "ipo_id",
+            "source_id",
+            "observed_at"
+          ],
+          "isUnique": true
+        },
+        "idx_ipo_listing_performance_latest": {
+          "name": "idx_ipo_listing_performance_latest",
+          "columns": [
+            "ipo_id",
+            "observed_at"
+          ],
+          "isUnique": false
+        },
+        "idx_ipo_listing_performance_source": {
+          "name": "idx_ipo_listing_performance_source",
+          "columns": [
+            "source_id",
+            "observed_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "ipo_listing_performance_ipo_id_ipos_id_fk": {
+          "name": "ipo_listing_performance_ipo_id_ipos_id_fk",
+          "tableFrom": "ipo_listing_performance",
+          "tableTo": "ipos",
+          "columnsFrom": [
+            "ipo_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "ipo_listing_performance_source_id_data_sources_id_fk": {
+          "name": "ipo_listing_performance_source_id_data_sources_id_fk",
+          "tableFrom": "ipo_listing_performance",
+          "tableTo": "data_sources",
+          "columnsFrom": [
+            "source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "ipo_listing_performance_ingestion_run_id_ingestion_runs_id_fk": {
+          "name": "ipo_listing_performance_ingestion_run_id_ingestion_runs_id_fk",
+          "tableFrom": "ipo_listing_performance",
+          "tableTo": "ingestion_runs",
+          "columnsFrom": [
+            "ingestion_run_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "ck_ipo_listing_performance_delay_nonnegative": {
+          "name": "ck_ipo_listing_performance_delay_nonnegative",
+          "value": "\"ipo_listing_performance\".\"delay_minutes\" IS NULL OR \"ipo_listing_performance\".\"delay_minutes\" >= 0"
+        }
+      }
+    },
+    "ipo_subscription_snapshots": {
+      "name": "ipo_subscription_snapshots",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ipo_id": {
+          "name": "ipo_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ingestion_run_id": {
+          "name": "ingestion_run_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "raw_record_id": {
+          "name": "raw_record_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "source_record_key": {
+          "name": "source_record_key",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "day_number": {
+          "name": "day_number",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "qib": {
+          "name": "qib",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "nii": {
+          "name": "nii",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "bnii": {
+          "name": "bnii",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "snii": {
+          "name": "snii",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "retail": {
+          "name": "retail",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "employee": {
+          "name": "employee",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "shareholder": {
+          "name": "shareholder",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "total": {
+          "name": "total",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "source_url": {
+          "name": "source_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "observed_at": {
+          "name": "observed_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "fetched_at": {
+          "name": "fetched_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "is_final": {
+          "name": "is_final",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "uq_ipo_subscription_source_record": {
+          "name": "uq_ipo_subscription_source_record",
+          "columns": [
+            "source_id",
+            "source_record_key"
+          ],
+          "isUnique": true,
+          "where": "\"ipo_subscription_snapshots\".\"source_record_key\" IS NOT NULL"
+        },
+        "uq_ipo_subscription_observation": {
+          "name": "uq_ipo_subscription_observation",
+          "columns": [
+            "ipo_id",
+            "source_id",
+            "observed_at"
+          ],
+          "isUnique": true
+        },
+        "idx_ipo_subscription_latest": {
+          "name": "idx_ipo_subscription_latest",
+          "columns": [
+            "ipo_id",
+            "observed_at"
+          ],
+          "isUnique": false
+        },
+        "idx_ipo_subscription_day": {
+          "name": "idx_ipo_subscription_day",
+          "columns": [
+            "ipo_id",
+            "day_number",
+            "observed_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "ipo_subscription_snapshots_ipo_id_ipos_id_fk": {
+          "name": "ipo_subscription_snapshots_ipo_id_ipos_id_fk",
+          "tableFrom": "ipo_subscription_snapshots",
+          "tableTo": "ipos",
+          "columnsFrom": [
+            "ipo_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "ipo_subscription_snapshots_source_id_data_sources_id_fk": {
+          "name": "ipo_subscription_snapshots_source_id_data_sources_id_fk",
+          "tableFrom": "ipo_subscription_snapshots",
+          "tableTo": "data_sources",
+          "columnsFrom": [
+            "source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "ipo_subscription_snapshots_ingestion_run_id_ingestion_runs_id_fk": {
+          "name": "ipo_subscription_snapshots_ingestion_run_id_ingestion_runs_id_fk",
+          "tableFrom": "ipo_subscription_snapshots",
+          "tableTo": "ingestion_runs",
+          "columnsFrom": [
+            "ingestion_run_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "ipo_subscription_snapshots_raw_record_id_raw_provider_records_id_fk": {
+          "name": "ipo_subscription_snapshots_raw_record_id_raw_provider_records_id_fk",
+          "tableFrom": "ipo_subscription_snapshots",
+          "tableTo": "raw_provider_records",
+          "columnsFrom": [
+            "raw_record_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "ck_ipo_subscription_nonnegative": {
+          "name": "ck_ipo_subscription_nonnegative",
+          "value": "(\"ipo_subscription_snapshots\".\"qib\" IS NULL OR CAST(\"ipo_subscription_snapshots\".\"qib\" AS NUMERIC) >= 0) AND (\"ipo_subscription_snapshots\".\"nii\" IS NULL OR CAST(\"ipo_subscription_snapshots\".\"nii\" AS NUMERIC) >= 0) AND (\"ipo_subscription_snapshots\".\"bnii\" IS NULL OR CAST(\"ipo_subscription_snapshots\".\"bnii\" AS NUMERIC) >= 0) AND (\"ipo_subscription_snapshots\".\"snii\" IS NULL OR CAST(\"ipo_subscription_snapshots\".\"snii\" AS NUMERIC) >= 0) AND (\"ipo_subscription_snapshots\".\"retail\" IS NULL OR CAST(\"ipo_subscription_snapshots\".\"retail\" AS NUMERIC) >= 0) AND (\"ipo_subscription_snapshots\".\"employee\" IS NULL OR CAST(\"ipo_subscription_snapshots\".\"employee\" AS NUMERIC) >= 0) AND (\"ipo_subscription_snapshots\".\"shareholder\" IS NULL OR CAST(\"ipo_subscription_snapshots\".\"shareholder\" AS NUMERIC) >= 0) AND (\"ipo_subscription_snapshots\".\"total\" IS NULL OR CAST(\"ipo_subscription_snapshots\".\"total\" AS NUMERIC) >= 0)"
+        }
+      }
+    },
+    "ipos": {
+      "name": "ipos",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "company_id": {
+          "name": "company_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "board": {
+          "name": "board",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "issue_type": {
+          "name": "issue_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'DRHP_FILED'"
+        },
+        "status_reason": {
+          "name": "status_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "currency": {
+          "name": "currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'INR'"
+        },
+        "isin": {
+          "name": "isin",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "face_value": {
+          "name": "face_value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "price_band_min": {
+          "name": "price_band_min",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "price_band_max": {
+          "name": "price_band_max",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "issue_price": {
+          "name": "issue_price",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "lot_size": {
+          "name": "lot_size",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "issue_size_cr": {
+          "name": "issue_size_cr",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "fresh_issue_cr": {
+          "name": "fresh_issue_cr",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "offer_for_sale_cr": {
+          "name": "offer_for_sale_cr",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "total_shares_offered": {
+          "name": "total_shares_offered",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "employee_reservation_cr": {
+          "name": "employee_reservation_cr",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "shareholder_reservation_cr": {
+          "name": "shareholder_reservation_cr",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "anchor_date": {
+          "name": "anchor_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "open_date": {
+          "name": "open_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "close_date": {
+          "name": "close_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "allotment_date": {
+          "name": "allotment_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "refund_date": {
+          "name": "refund_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "demat_date": {
+          "name": "demat_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "listing_date": {
+          "name": "listing_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "withdrawn_at": {
+          "name": "withdrawn_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "deferred_at": {
+          "name": "deferred_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "registrar_name": {
+          "name": "registrar_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "registrar_url": {
+          "name": "registrar_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "lead_managers_json": {
+          "name": "lead_managers_json",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "exchanges_json": {
+          "name": "exchanges_json",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "first_seen_at": {
+          "name": "first_seen_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "last_seen_at": {
+          "name": "last_seen_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "uq_ipos_slug": {
+          "name": "uq_ipos_slug",
+          "columns": [
+            "slug"
+          ],
+          "isUnique": true
+        },
+        "uq_ipos_isin": {
+          "name": "uq_ipos_isin",
+          "columns": [
+            "isin"
+          ],
+          "isUnique": true,
+          "where": "\"ipos\".\"isin\" IS NOT NULL"
+        },
+        "idx_ipos_company": {
+          "name": "idx_ipos_company",
+          "columns": [
+            "company_id"
+          ],
+          "isUnique": false
+        },
+        "idx_ipos_status_open_date": {
+          "name": "idx_ipos_status_open_date",
+          "columns": [
+            "status",
+            "open_date"
+          ],
+          "isUnique": false
+        },
+        "idx_ipos_status_close_date": {
+          "name": "idx_ipos_status_close_date",
+          "columns": [
+            "status",
+            "close_date"
+          ],
+          "isUnique": false
+        },
+        "idx_ipos_status_listing_date": {
+          "name": "idx_ipos_status_listing_date",
+          "columns": [
+            "status",
+            "listing_date"
+          ],
+          "isUnique": false
+        },
+        "idx_ipos_board_status": {
+          "name": "idx_ipos_board_status",
+          "columns": [
+            "board",
+            "status"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "ipos_company_id_companies_id_fk": {
+          "name": "ipos_company_id_companies_id_fk",
+          "tableFrom": "ipos",
+          "tableTo": "companies",
+          "columnsFrom": [
+            "company_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "ck_ipos_currency_inr": {
+          "name": "ck_ipos_currency_inr",
+          "value": "\"ipos\".\"currency\" = 'INR'"
+        },
+        "ck_ipos_price_band_order": {
+          "name": "ck_ipos_price_band_order",
+          "value": "\"ipos\".\"price_band_min\" IS NULL OR \"ipos\".\"price_band_max\" IS NULL OR CAST(\"ipos\".\"price_band_max\" AS NUMERIC) >= CAST(\"ipos\".\"price_band_min\" AS NUMERIC)"
+        },
+        "ck_ipos_lot_size_positive": {
+          "name": "ck_ipos_lot_size_positive",
+          "value": "\"ipos\".\"lot_size\" IS NULL OR \"ipos\".\"lot_size\" > 0"
+        },
+        "ck_ipos_open_close_order": {
+          "name": "ck_ipos_open_close_order",
+          "value": "\"ipos\".\"open_date\" IS NULL OR \"ipos\".\"close_date\" IS NULL OR \"ipos\".\"close_date\" >= \"ipos\".\"open_date\""
+        }
+      }
+    },
+    "manual_overrides": {
+      "name": "manual_overrides",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "entity_type": {
+          "name": "entity_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "entity_id": {
+          "name": "entity_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ipo_id": {
+          "name": "ipo_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "field_name": {
+          "name": "field_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "value_type": {
+          "name": "value_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "old_value": {
+          "name": "old_value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "new_value": {
+          "name": "new_value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "reason": {
+          "name": "reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "created_by": {
+          "name": "created_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "field_source_id": {
+          "name": "field_source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "conflict_id": {
+          "name": "conflict_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "verified_by": {
+          "name": "verified_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "verified_at": {
+          "name": "verified_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "applied_at": {
+          "name": "applied_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "revoked_at": {
+          "name": "revoked_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "revoked_by": {
+          "name": "revoked_by",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "revocation_reason": {
+          "name": "revocation_reason",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "uq_manual_overrides_active_field": {
+          "name": "uq_manual_overrides_active_field",
+          "columns": [
+            "entity_type",
+            "entity_id",
+            "field_name"
+          ],
+          "isUnique": true,
+          "where": "\"manual_overrides\".\"revoked_at\" IS NULL"
+        },
+        "idx_manual_overrides_ipo": {
+          "name": "idx_manual_overrides_ipo",
+          "columns": [
+            "ipo_id",
+            "applied_at"
+          ],
+          "isUnique": false
+        },
+        "idx_manual_overrides_actor": {
+          "name": "idx_manual_overrides_actor",
+          "columns": [
+            "created_by",
+            "applied_at"
+          ],
+          "isUnique": false
+        },
+        "idx_manual_overrides_unverified": {
+          "name": "idx_manual_overrides_unverified",
+          "columns": [
+            "verified_at",
+            "applied_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "manual_overrides_ipo_id_ipos_id_fk": {
+          "name": "manual_overrides_ipo_id_ipos_id_fk",
+          "tableFrom": "manual_overrides",
+          "tableTo": "ipos",
+          "columnsFrom": [
+            "ipo_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "manual_overrides_source_id_data_sources_id_fk": {
+          "name": "manual_overrides_source_id_data_sources_id_fk",
+          "tableFrom": "manual_overrides",
+          "tableTo": "data_sources",
+          "columnsFrom": [
+            "source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "manual_overrides_field_source_id_ipo_field_sources_id_fk": {
+          "name": "manual_overrides_field_source_id_ipo_field_sources_id_fk",
+          "tableFrom": "manual_overrides",
+          "tableTo": "ipo_field_sources",
+          "columnsFrom": [
+            "field_source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "manual_overrides_conflict_id_data_conflicts_id_fk": {
+          "name": "manual_overrides_conflict_id_data_conflicts_id_fk",
+          "tableFrom": "manual_overrides",
+          "tableTo": "data_conflicts",
+          "columnsFrom": [
+            "conflict_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "market_index_quotes": {
+      "name": "market_index_quotes",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "market_index_id": {
+          "name": "market_index_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ingestion_run_id": {
+          "name": "ingestion_run_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "change": {
+          "name": "change",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "change_percent": {
+          "name": "change_percent",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "open": {
+          "name": "open",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "high": {
+          "name": "high",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "low": {
+          "name": "low",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "previous_close": {
+          "name": "previous_close",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "quote_mode": {
+          "name": "quote_mode",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'UNKNOWN'"
+        },
+        "delay_minutes": {
+          "name": "delay_minutes",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "market_status": {
+          "name": "market_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "observed_at": {
+          "name": "observed_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "fetched_at": {
+          "name": "fetched_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "uq_market_index_quotes_observation": {
+          "name": "uq_market_index_quotes_observation",
+          "columns": [
+            "market_index_id",
+            "source_id",
+            "observed_at"
+          ],
+          "isUnique": true
+        },
+        "idx_market_index_quotes_latest": {
+          "name": "idx_market_index_quotes_latest",
+          "columns": [
+            "market_index_id",
+            "observed_at"
+          ],
+          "isUnique": false
+        },
+        "idx_market_index_quotes_source": {
+          "name": "idx_market_index_quotes_source",
+          "columns": [
+            "source_id",
+            "observed_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "market_index_quotes_market_index_id_market_indices_id_fk": {
+          "name": "market_index_quotes_market_index_id_market_indices_id_fk",
+          "tableFrom": "market_index_quotes",
+          "tableTo": "market_indices",
+          "columnsFrom": [
+            "market_index_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "market_index_quotes_source_id_data_sources_id_fk": {
+          "name": "market_index_quotes_source_id_data_sources_id_fk",
+          "tableFrom": "market_index_quotes",
+          "tableTo": "data_sources",
+          "columnsFrom": [
+            "source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "market_index_quotes_ingestion_run_id_ingestion_runs_id_fk": {
+          "name": "market_index_quotes_ingestion_run_id_ingestion_runs_id_fk",
+          "tableFrom": "market_index_quotes",
+          "tableTo": "ingestion_runs",
+          "columnsFrom": [
+            "ingestion_run_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "ck_market_index_quotes_delay_nonnegative": {
+          "name": "ck_market_index_quotes_delay_nonnegative",
+          "value": "\"market_index_quotes\".\"delay_minutes\" IS NULL OR \"market_index_quotes\".\"delay_minutes\" >= 0"
+        }
+      }
+    },
+    "market_indices": {
+      "name": "market_indices",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "symbol": {
+          "name": "symbol",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "exchange": {
+          "name": "exchange",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "currency": {
+          "name": "currency",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'INR'"
+        },
+        "is_active": {
+          "name": "is_active",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "uq_market_indices_exchange_symbol": {
+          "name": "uq_market_indices_exchange_symbol",
+          "columns": [
+            "exchange",
+            "symbol"
+          ],
+          "isUnique": true
+        },
+        "idx_market_indices_active": {
+          "name": "idx_market_indices_active",
+          "columns": [
+            "is_active",
+            "name"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "ck_market_indices_currency_inr": {
+          "name": "ck_market_indices_currency_inr",
+          "value": "\"market_indices\".\"currency\" = 'INR'"
+        }
+      }
+    },
+    "news_articles": {
+      "name": "news_articles",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ingestion_run_id": {
+          "name": "ingestion_run_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "raw_record_id": {
+          "name": "raw_record_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "external_id": {
+          "name": "external_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "headline": {
+          "name": "headline",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "summary": {
+          "name": "summary",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "publisher": {
+          "name": "publisher",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "canonical_url": {
+          "name": "canonical_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "image_url": {
+          "name": "image_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "language": {
+          "name": "language",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'en'"
+        },
+        "published_at": {
+          "name": "published_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "fetched_at": {
+          "name": "fetched_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "uq_news_articles_source_url": {
+          "name": "uq_news_articles_source_url",
+          "columns": [
+            "source_id",
+            "canonical_url"
+          ],
+          "isUnique": true
+        },
+        "uq_news_articles_source_external_id": {
+          "name": "uq_news_articles_source_external_id",
+          "columns": [
+            "source_id",
+            "external_id"
+          ],
+          "isUnique": true,
+          "where": "\"news_articles\".\"external_id\" IS NOT NULL"
+        },
+        "idx_news_articles_published": {
+          "name": "idx_news_articles_published",
+          "columns": [
+            "published_at"
+          ],
+          "isUnique": false
+        },
+        "idx_news_articles_category_published": {
+          "name": "idx_news_articles_category_published",
+          "columns": [
+            "category",
+            "published_at"
+          ],
+          "isUnique": false
+        },
+        "idx_news_articles_source_published": {
+          "name": "idx_news_articles_source_published",
+          "columns": [
+            "source_id",
+            "published_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "news_articles_source_id_data_sources_id_fk": {
+          "name": "news_articles_source_id_data_sources_id_fk",
+          "tableFrom": "news_articles",
+          "tableTo": "data_sources",
+          "columnsFrom": [
+            "source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "news_articles_ingestion_run_id_ingestion_runs_id_fk": {
+          "name": "news_articles_ingestion_run_id_ingestion_runs_id_fk",
+          "tableFrom": "news_articles",
+          "tableTo": "ingestion_runs",
+          "columnsFrom": [
+            "ingestion_run_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        },
+        "news_articles_raw_record_id_raw_provider_records_id_fk": {
+          "name": "news_articles_raw_record_id_raw_provider_records_id_fk",
+          "tableFrom": "news_articles",
+          "tableTo": "raw_provider_records",
+          "columnsFrom": [
+            "raw_record_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "news_companies": {
+      "name": "news_companies",
+      "columns": {
+        "news_id": {
+          "name": "news_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "company_id": {
+          "name": "company_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "idx_news_companies_company": {
+          "name": "idx_news_companies_company",
+          "columns": [
+            "company_id",
+            "news_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "news_companies_news_id_news_articles_id_fk": {
+          "name": "news_companies_news_id_news_articles_id_fk",
+          "tableFrom": "news_companies",
+          "tableTo": "news_articles",
+          "columnsFrom": [
+            "news_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "news_companies_company_id_companies_id_fk": {
+          "name": "news_companies_company_id_companies_id_fk",
+          "tableFrom": "news_companies",
+          "tableTo": "companies",
+          "columnsFrom": [
+            "company_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "news_companies_news_id_company_id_pk": {
+          "columns": [
+            "news_id",
+            "company_id"
+          ],
+          "name": "news_companies_news_id_company_id_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "news_ipos": {
+      "name": "news_ipos",
+      "columns": {
+        "news_id": {
+          "name": "news_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ipo_id": {
+          "name": "ipo_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "idx_news_ipos_ipo": {
+          "name": "idx_news_ipos_ipo",
+          "columns": [
+            "ipo_id",
+            "news_id"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "news_ipos_news_id_news_articles_id_fk": {
+          "name": "news_ipos_news_id_news_articles_id_fk",
+          "tableFrom": "news_ipos",
+          "tableTo": "news_articles",
+          "columnsFrom": [
+            "news_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "news_ipos_ipo_id_ipos_id_fk": {
+          "name": "news_ipos_ipo_id_ipos_id_fk",
+          "tableFrom": "news_ipos",
+          "tableTo": "ipos",
+          "columnsFrom": [
+            "ipo_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "news_ipos_news_id_ipo_id_pk": {
+          "columns": [
+            "news_id",
+            "ipo_id"
+          ],
+          "name": "news_ipos_news_id_ipo_id_pk"
+        }
+      },
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    },
+    "provider_status": {
+      "name": "provider_status",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "health": {
+          "name": "health",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'UNKNOWN'"
+        },
+        "last_attempt_at": {
+          "name": "last_attempt_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "last_successful_at": {
+          "name": "last_successful_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "last_failure_at": {
+          "name": "last_failure_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "last_error_code": {
+          "name": "last_error_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "last_error_message": {
+          "name": "last_error_message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "records_synced": {
+          "name": "records_synced",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "consecutive_failures": {
+          "name": "consecutive_failures",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": 0
+        },
+        "latency_ms": {
+          "name": "latency_ms",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        }
+      },
+      "indexes": {
+        "uq_provider_status_source": {
+          "name": "uq_provider_status_source",
+          "columns": [
+            "source_id"
+          ],
+          "isUnique": true
+        },
+        "idx_provider_status_health": {
+          "name": "idx_provider_status_health",
+          "columns": [
+            "health",
+            "updated_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "provider_status_source_id_data_sources_id_fk": {
+          "name": "provider_status_source_id_data_sources_id_fk",
+          "tableFrom": "provider_status",
+          "tableTo": "data_sources",
+          "columnsFrom": [
+            "source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "ck_provider_status_counts_nonnegative": {
+          "name": "ck_provider_status_counts_nonnegative",
+          "value": "\"provider_status\".\"records_synced\" >= 0 AND \"provider_status\".\"consecutive_failures\" >= 0 AND (\"provider_status\".\"latency_ms\" IS NULL OR \"provider_status\".\"latency_ms\" >= 0)"
+        }
+      }
+    },
+    "raw_provider_records": {
+      "name": "raw_provider_records",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "source_id": {
+          "name": "source_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ingestion_run_id": {
+          "name": "ingestion_run_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "entity_type": {
+          "name": "entity_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "external_id": {
+          "name": "external_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "endpoint": {
+          "name": "endpoint",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "payload_json": {
+          "name": "payload_json",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "payload_hash": {
+          "name": "payload_hash",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "content_type": {
+          "name": "content_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "schema_version": {
+          "name": "schema_version",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "validation_status": {
+          "name": "validation_status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "'PENDING'"
+        },
+        "validation_errors_json": {
+          "name": "validation_errors_json",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "received_at": {
+          "name": "received_at",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false,
+          "default": "(unixepoch() * 1000)"
+        },
+        "retained_until": {
+          "name": "retained_until",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "uq_raw_provider_records_source_external_hash": {
+          "name": "uq_raw_provider_records_source_external_hash",
+          "columns": [
+            "source_id",
+            "entity_type",
+            "external_id",
+            "payload_hash"
+          ],
+          "isUnique": true,
+          "where": "\"raw_provider_records\".\"external_id\" IS NOT NULL"
+        },
+        "idx_raw_provider_records_run": {
+          "name": "idx_raw_provider_records_run",
+          "columns": [
+            "ingestion_run_id"
+          ],
+          "isUnique": false
+        },
+        "idx_raw_provider_records_source_received": {
+          "name": "idx_raw_provider_records_source_received",
+          "columns": [
+            "source_id",
+            "received_at"
+          ],
+          "isUnique": false
+        },
+        "idx_raw_provider_records_hash": {
+          "name": "idx_raw_provider_records_hash",
+          "columns": [
+            "payload_hash"
+          ],
+          "isUnique": false
+        },
+        "idx_raw_provider_records_validation": {
+          "name": "idx_raw_provider_records_validation",
+          "columns": [
+            "validation_status",
+            "received_at"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {
+        "raw_provider_records_source_id_data_sources_id_fk": {
+          "name": "raw_provider_records_source_id_data_sources_id_fk",
+          "tableFrom": "raw_provider_records",
+          "tableTo": "data_sources",
+          "columnsFrom": [
+            "source_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "restrict",
+          "onUpdate": "no action"
+        },
+        "raw_provider_records_ingestion_run_id_ingestion_runs_id_fk": {
+          "name": "raw_provider_records_ingestion_run_id_ingestion_runs_id_fk",
+          "tableFrom": "raw_provider_records",
+          "tableTo": "ingestion_runs",
+          "columnsFrom": [
+            "ingestion_run_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {}
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}

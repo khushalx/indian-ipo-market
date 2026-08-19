@@ -14,8 +14,13 @@ interface ComparePageProps {
 
 export default async function ComparePage({ searchParams }: ComparePageProps) {
   const params = await searchParams;
-  const ipos = await ipoProvider.getIPOs();
-  const financials = (await Promise.all(ipos.map((ipo) => ipoProvider.getIPOFinancials(ipo.id)))).flat();
+  const ipoResult = await ipoProvider.getIPOs().then(
+    (ipos) => ({ ipos, unavailable: false }),
+    () => ({ ipos: [], unavailable: true }),
+  );
+  const { ipos } = ipoResult;
+  const financialResults = await Promise.allSettled(ipos.map((ipo) => ipoProvider.getIPOFinancials(ipo.id)));
+  const financials = financialResults.flatMap((result) => result.status === "fulfilled" ? result.value : []);
   const openWithFinancials = ipos.filter(
     (ipo) => ipo.status === "open" && financials.some((row) => row.ipoId === ipo.id),
   );
@@ -31,5 +36,5 @@ export default async function ComparePage({ searchParams }: ComparePageProps) {
     .slice(0, 3);
   const defaultSelection = requestedSelection.length ? requestedSelection : fallbackSelection;
 
-  return <IPOCompare key={defaultSelection.join(":")} ipos={ipos} financials={financials} defaultSelection={defaultSelection} />;
+  return <IPOCompare key={defaultSelection.join(":")} ipos={ipos} financials={financials} defaultSelection={defaultSelection} dataUnavailable={ipoResult.unavailable} />;
 }

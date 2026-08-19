@@ -253,10 +253,15 @@
 }
 
 .gmpMetric {
-  border-top: 2px solid var(--detail-green);
+  border-top: 2px solid var(--detail-line);
 }
 
-.gmpMetric dd { color: var(--detail-green); }
+.gmpMetric dd { color: var(--detail-ink); }
+.gmpPositive { border-top-color: var(--detail-green); }
+.gmpPositive dd { color: var(--detail-green); }
+.gmpNegative { border-top-color: var(--detail-red); }
+.gmpNegative dd { color: var(--detail-red); }
+.gmpNeutral { border-top-color: var(--detail-line); }
 
 .keyDates {
   display: grid;
@@ -1001,6 +1006,17 @@
 .documentList strong { overflow: hidden; color: #34302c; font-size: 11px; font-weight: 620; text-overflow: ellipsis; white-space: nowrap; }
 .documentList small { color: #89837a; font-size: 9px; text-align: right; }
 .documentList a { display: inline-flex; align-items: center; gap: 5px; color: var(--detail-accent); font-size: 10px; font-weight: 650; }
+.documentList .documentAvailability {
+  max-width: 190px;
+  justify-self: end;
+  color: #7c3f32;
+  font-size: 9px;
+  font-weight: 650;
+  letter-spacing: 0;
+  line-height: 1.4;
+  text-align: right;
+  text-transform: none;
+}
 
 .newsList { border-top: 1px solid var(--detail-line); }
 .newsList li { padding: 20px 2px; border-bottom: 1px solid var(--detail-line); }
@@ -1171,7 +1187,8 @@
   .eventCopy time { font-size: 9px; }
   .documentList li { grid-template-columns: auto 1fr; }
   .documentList li > div { grid-template-columns: 1fr; gap: 4px; }
-  .documentList li > a { grid-column: 2; justify-self: start; }
+  .documentList li > a,
+  .documentList .documentAvailability { grid-column: 2; justify-self: start; text-align: left; }
   .newsMeta { flex-wrap: wrap; }
   .newsMeta time { width: 100%; margin-left: 0; }
   .newsList h3 { font-size: 17px; }

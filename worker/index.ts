@@ -42,6 +42,33 @@ const worker = {
 
     return handler.fetch(request, env, ctx);
   },
+
+  scheduled(_controller: ScheduledController, env: Env, ctx: ExecutionContext): void {
+    ctx.waitUntil((async () => {
+      try {
+        const [{ ensurePhase2Schema }, { runIngestionSuite }] = await Promise.all([
+          import("../db/runtime-migrations"),
+          import("../jobs"),
+        ]);
+        await ensurePhase2Schema(env.DB);
+        const result = await runIngestionSuite({ trigger: "SCHEDULED", database: env.DB });
+        if (result.status === "FAILED") {
+          throw new Error("All attempted scheduled ingestion jobs failed");
+        }
+        console.info(JSON.stringify({
+          event: "scheduled_ingestion_complete",
+          status: result.status,
+          jobs: result.jobs.map((job) => ({ job: job.job, status: job.status, errors: job.errors })),
+        }));
+      } catch (error) {
+        console.error(JSON.stringify({
+          event: "scheduled_ingestion_failed",
+          errorType: error instanceof Error ? error.name : "unknown_error",
+        }));
+        throw error;
+      }
+    })());
+  },
 };
 
 export default worker;

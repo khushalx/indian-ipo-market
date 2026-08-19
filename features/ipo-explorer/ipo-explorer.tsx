@@ -3,8 +3,9 @@
 import { ArrowDownUp, Search, SlidersHorizontal, X } from "lucide-react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { GMPQuote } from "@/components/gmp-quote";
 import { WatchlistButton } from "@/components/watchlist-button";
-import { formatCrore, formatDate, formatIndianCurrency, formatSubscription } from "@/lib/format";
+import { calculateGMPPercent, formatBoard, formatCrore, formatDate, formatIndianCurrency, formatPriceBand, formatSubscription, titleCase } from "@/lib/format";
 import type { Exchange, IPO, IPOSort, IPOStatus, IPOType } from "@/types";
 import styles from "./ipo-explorer.module.css";
 
@@ -13,12 +14,13 @@ type Filters = { type: "all" | IPOType; status: "all" | IPOStatus; year: "all" |
 
 const initialFilters: Filters = { type: "all", status: "all", year: "all", size: "all", exchange: "all" };
 function date(value?: string) { return formatDate(value, "medium"); }
-function gmpPct(ipo: IPO) { return ipo.gmp == null ? undefined : (ipo.gmp / ipo.priceBandMax) * 100; }
+function gmpPct(ipo: IPO) { return calculateGMPPercent(ipo.gmp, ipo.priceBandMax); }
 function matchesSize(ipo: IPO, size: Size) {
-  if (size === "under100") return ipo.issueSizeCr < 100;
-  if (size === "100to500") return ipo.issueSizeCr >= 100 && ipo.issueSizeCr < 500;
-  if (size === "500to1000") return ipo.issueSizeCr >= 500 && ipo.issueSizeCr < 1000;
-  if (size === "over1000") return ipo.issueSizeCr >= 1000;
+  if (size !== "all" && ipo.issueSizeCr == null) return false;
+  if (size === "under100") return ipo.issueSizeCr! < 100;
+  if (size === "100to500") return ipo.issueSizeCr! >= 100 && ipo.issueSizeCr! < 500;
+  if (size === "500to1000") return ipo.issueSizeCr! >= 500 && ipo.issueSizeCr! < 1000;
+  if (size === "over1000") return ipo.issueSizeCr! >= 1000;
   return true;
 }
 
@@ -27,22 +29,25 @@ export function IPOExplorer({ ipos }: { ipos: IPO[] }) {
   const [filters, setFilters] = useState<Filters>(initialFilters);
   const [sort, setSort] = useState<IPOSort>("newest");
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const newFilings = useMemo(() => ipos.filter((ipo) => ipo.latestFilingDate || ipo.status === "drhp_filed" || ipo.status === "rhp_filed").sort((a, b) => (b.latestFilingDate ?? "").localeCompare(a.latestFilingDate ?? "")).slice(0, 5), [ipos]);
+  const years = useMemo(() => Array.from(new Set(ipos.map((ipo) => (ipo.openDate ?? ipo.latestFilingDate)?.slice(0, 4)).filter((value): value is string => Boolean(value)))).sort().reverse(), [ipos]);
+  const isMock = ipos.some((ipo) => ipo.mockDisclaimer);
 
   const results = useMemo(() => {
     const normalized = query.trim().toLowerCase();
     return ipos
-      .filter((ipo) => !normalized || `${ipo.company.name} ${ipo.company.industry} ${ipo.company.sector}`.toLowerCase().includes(normalized))
+      .filter((ipo) => !normalized || `${ipo.company.name} ${ipo.company.industry ?? ""} ${ipo.company.sector ?? ""}`.toLowerCase().includes(normalized))
       .filter((ipo) => filters.type === "all" || ipo.type === filters.type)
       .filter((ipo) => filters.status === "all" || ipo.status === filters.status)
       .filter((ipo) => filters.year === "all" || ipo.openDate?.startsWith(filters.year))
       .filter((ipo) => filters.exchange === "all" || ipo.exchange.includes(filters.exchange))
       .filter((ipo) => matchesSize(ipo, filters.size))
       .sort((a, b) => {
-        if (sort === "issue_size") return b.issueSizeCr - a.issueSizeCr;
+        if (sort === "issue_size") return (b.issueSizeCr ?? -Infinity) - (a.issueSizeCr ?? -Infinity);
         if (sort === "gmp_percent") return (gmpPct(b) ?? -Infinity) - (gmpPct(a) ?? -Infinity);
         if (sort === "subscription") return (b.subscriptionTotal ?? -Infinity) - (a.subscriptionTotal ?? -Infinity);
         if (sort === "listing_gain") return (b.listingGainPercent ?? -Infinity) - (a.listingGainPercent ?? -Infinity);
-        return (b.openDate ?? "").localeCompare(a.openDate ?? "");
+        return (b.openDate ?? b.latestFilingDate ?? "").localeCompare(a.openDate ?? a.latestFilingDate ?? "");
       });
   }, [filters, ipos, query, sort]);
 
@@ -52,6 +57,10 @@ export function IPOExplorer({ ipos }: { ipos: IPO[] }) {
 
   return (
     <div>
+      {newFilings.length ? <section className={styles.newFilings} aria-labelledby="new-filings-heading">
+        <div><p>REGULATORY PIPELINE</p><h2 id="new-filings-heading">New filings</h2></div>
+        <div>{newFilings.map((ipo) => ipo.latestDocumentUrl && ipo.latestDocumentAvailability !== "not_found" ? <a key={ipo.id} href={ipo.latestDocumentUrl} target="_blank" rel="noreferrer"><strong>{ipo.company.name}</strong><span>{ipo.latestFilingType?.replaceAll("_", " ") ?? ipo.status.replaceAll("_", " ")} · {date(ipo.latestFilingDate)}</span></a> : <Link key={ipo.id} href={`/ipo/${ipo.slug}`}><strong>{ipo.company.name}</strong><span>{ipo.status.replaceAll("_", " ")} · {date(ipo.latestFilingDate)}</span></Link>)}</div>
+      </section> : null}
       <div className={styles.controls}>
         <label className={styles.search}><Search size={15} aria-hidden="true" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search companies or industries" aria-label="Search IPOs" />{query && <button onClick={() => setQuery("")} aria-label="Clear search"><X size={13} /></button>}</label>
         <button className={styles.mobileFilter} onClick={() => setFiltersOpen((open) => !open)} aria-expanded={filtersOpen}><SlidersHorizontal size={14} /> Filters {activeCount > 0 && <b>{activeCount}</b>}</button>
@@ -60,14 +69,14 @@ export function IPOExplorer({ ipos }: { ipos: IPO[] }) {
 
       <div className={`${styles.filterBar} ${filtersOpen ? styles.filterBarOpen : ""}`}>
         <Filter label="Board" value={filters.type} onChange={(value) => update("type", value as Filters["type"])} options={[{value:"all",label:"All"},{value:"mainboard",label:"Mainboard"},{value:"sme",label:"SME"}]} />
-        <Filter label="Status" value={filters.status} onChange={(value) => update("status", value as Filters["status"])} options={[{value:"all",label:"All"},{value:"upcoming",label:"Upcoming"},{value:"open",label:"Open"},{value:"closed",label:"Closed"},{value:"listed",label:"Listed"}]} />
-        <Filter label="Year" value={filters.year} onChange={(value) => update("year", value)} options={[{value:"all",label:"All years"},{value:"2026",label:"2026"},{value:"2025",label:"2025"}]} />
+        <Filter label="Status" value={filters.status} onChange={(value) => update("status", value as Filters["status"])} options={[{value:"all",label:"All"},{value:"drhp_filed",label:"DRHP filed"},{value:"rhp_filed",label:"RHP filed"},{value:"upcoming",label:"Upcoming"},{value:"open",label:"Open"},{value:"closed",label:"Closed"},{value:"listed",label:"Listed"}]} />
+        <Filter label="Year" value={filters.year} onChange={(value) => update("year", value)} options={[{value:"all",label:"All years"}, ...years.map((year) => ({ value: year, label: year }))]} />
         <Filter label="Issue size" value={filters.size} onChange={(value) => update("size", value as Size)} options={[{value:"all",label:"All sizes"},{value:"under100",label:"Under ₹100 Cr"},{value:"100to500",label:"₹100–500 Cr"},{value:"500to1000",label:"₹500–1,000 Cr"},{value:"over1000",label:"Over ₹1,000 Cr"}]} />
         <Filter label="Exchange" value={filters.exchange} onChange={(value) => update("exchange", value as Filters["exchange"])} options={[{value:"all",label:"All exchanges"},{value:"NSE",label:"NSE"},{value:"BSE",label:"BSE"},{value:"NSE_EMERGE",label:"NSE Emerge"},{value:"BSE_SME",label:"BSE SME"}]} />
         {activeCount > 0 && <button className={styles.clearFilters} onClick={() => setFilters(initialFilters)}>Clear</button>}
       </div>
 
-      <div className={styles.resultMeta}><p><strong>{results.length}</strong> IPOs</p><span>Development dataset · Indicative values only</span></div>
+      <div className={styles.resultMeta}><p><strong>{results.length}</strong> IPOs</p><span>{isMock ? "Development dataset · Indicative values only" : "Database records · Missing fields are never fabricated"}</span></div>
 
       {results.length ? (
         <>
@@ -80,7 +89,7 @@ export function IPOExplorer({ ipos }: { ipos: IPO[] }) {
           <div className={styles.mobileResults}>{results.map((ipo) => <MobileResult key={ipo.id} ipo={ipo} />)}</div>
         </>
       ) : (
-        <div className={styles.empty}><Search size={20} /><h2>No IPOs match these filters</h2><p>Try a broader status, board or issue-size range.</p><button onClick={reset}>Reset directory</button></div>
+        <div className={styles.empty}><Search size={20} /><h2>{ipos.length ? "No IPOs match these filters" : "Data temporarily unavailable"}</h2><p>{ipos.length ? "Try a broader status, board or issue-size range." : "No verified IPO records are currently available. The site will not substitute mock values."}</p>{ipos.length ? <button onClick={reset}>Reset directory</button> : null}</div>
       )}
     </div>
   );
@@ -91,15 +100,14 @@ function Filter({ label, value, options, onChange }: { label: string; value: str
 }
 
 function DesktopRow({ ipo }: { ipo: IPO }) {
-  const pct = gmpPct(ipo);
   return (
     <tr>
       <td><Link className={styles.company} href={`/ipo/${ipo.slug}`}><span>{ipo.company.name.charAt(0)}</span><div><strong>{ipo.company.name}</strong><small>{ipo.company.industry}</small></div></Link></td>
-      <td>{ipo.type === "mainboard" ? "Mainboard" : "SME"}<small className={styles.exchanges}>{ipo.exchange.join(" · ").replace("_", " ")}</small></td>
-      <td><span className={`${styles.status} ${styles[ipo.status]}`}>{ipo.status}</span></td>
-      <td className={styles.numeric}>{formatIndianCurrency(ipo.priceBandMin)}–{formatIndianCurrency(ipo.priceBandMax).replace("₹", "")}</td>
+      <td>{formatBoard(ipo.type)}<small className={styles.exchanges}>{ipo.exchange.length ? ipo.exchange.join(" · ").replace("_", " ") : "Exchange not announced"}</small></td>
+      <td><span className={`${styles.status} ${styles[ipo.status]}`}>{titleCase(ipo.status)}</span></td>
+      <td className={styles.numeric}>{formatPriceBand(ipo.priceBandMin, ipo.priceBandMax)}</td>
       <td className={styles.numeric}>{formatCrore(ipo.issueSizeCr)}</td>
-      <td className={styles.numeric}>{ipo.gmp == null ? <span className={styles.na}>—</span> : <><b className="financial-up">+{formatIndianCurrency(ipo.gmp)}</b><small className="financial-up">+{pct?.toFixed(1)}%</small></>}</td>
+      <td className={styles.numeric}><GMPQuote value={ipo.gmp} upperPriceBand={ipo.priceBandMax} updatedAt={ipo.gmpUpdatedAt} /></td>
       <td className={`${styles.numeric} ${styles.bold}`}>{formatSubscription(ipo.subscriptionTotal)}</td>
       <td className={styles.numeric}>{date(ipo.openDate)}</td>
       <td className={styles.numeric}>{ipo.listingGainPercent == null ? date(ipo.listingDate) : <><b>{formatIndianCurrency(ipo.listingPrice)}</b><small className={ipo.listingGainPercent >= 0 ? "financial-up" : "financial-down"}>{ipo.listingGainPercent >= 0 ? "+" : ""}{ipo.listingGainPercent.toFixed(1)}%</small></>}</td>
@@ -111,9 +119,9 @@ function DesktopRow({ ipo }: { ipo: IPO }) {
 function MobileResult({ ipo }: { ipo: IPO }) {
   return (
     <article>
-      <div className={styles.mobileTitle}><Link href={`/ipo/${ipo.slug}`}><span>{ipo.company.name.charAt(0)}</span><div><strong>{ipo.company.name}</strong><small>{ipo.type === "mainboard" ? "Mainboard" : "SME"} · {ipo.company.industry}</small></div></Link><WatchlistButton ipoId={ipo.id} compact /></div>
-      <div className={styles.mobileState}><span className={`${styles.status} ${styles[ipo.status]}`}>{ipo.status}</span><time>{date(ipo.openDate)}</time></div>
-      <dl><div><dt>Price band</dt><dd>{formatIndianCurrency(ipo.priceBandMin)}–{formatIndianCurrency(ipo.priceBandMax).replace("₹", "")}</dd></div><div><dt>Issue size</dt><dd>{formatCrore(ipo.issueSizeCr)}</dd></div><div><dt>GMP</dt><dd className={ipo.gmp != null ? "financial-up" : undefined}>{ipo.gmp == null ? "—" : `+${formatIndianCurrency(ipo.gmp)}`}</dd></div><div><dt>Subscribed</dt><dd>{formatSubscription(ipo.subscriptionTotal)}</dd></div></dl>
+      <div className={styles.mobileTitle}><Link href={`/ipo/${ipo.slug}`}><span>{ipo.company.name.charAt(0)}</span><div><strong>{ipo.company.name}</strong><small>{formatBoard(ipo.type)} · {ipo.company.industry ?? "Industry not available"}</small></div></Link><WatchlistButton ipoId={ipo.id} compact /></div>
+      <div className={styles.mobileState}><span className={`${styles.status} ${styles[ipo.status]}`}>{titleCase(ipo.status)}</span><time>{date(ipo.openDate ?? ipo.latestFilingDate)}</time></div>
+      <dl><div><dt>Price band</dt><dd>{formatPriceBand(ipo.priceBandMin, ipo.priceBandMax)}</dd></div><div><dt>Issue size</dt><dd>{formatCrore(ipo.issueSizeCr)}</dd></div><div><dt>GMP</dt><dd><GMPQuote value={ipo.gmp} upperPriceBand={ipo.priceBandMax} updatedAt={ipo.gmpUpdatedAt} /></dd></div><div><dt>Subscribed</dt><dd>{formatSubscription(ipo.subscriptionTotal)}</dd></div></dl>
       <Link className={styles.viewDetail} href={`/ipo/${ipo.slug}`}>View IPO details <span>→</span></Link>
     </article>
   );

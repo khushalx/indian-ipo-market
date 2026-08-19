@@ -6,11 +6,14 @@ import styles from "./page.module.css";
 export const metadata: Metadata = { title: "IPO News & Filings", description: "Editorial IPO news, filing updates and listing coverage for India's primary market." };
 
 export default async function NewsPage() {
-  const [articles, ipos] = await Promise.all([newsProvider.getNews(), ipoProvider.getIPOs()]);
+  const results = await Promise.allSettled([newsProvider.getNews(), ipoProvider.getIPOs()]);
+  const articles = results[0].status === "fulfilled" ? results[0].value : [];
+  const ipos = results[1].status === "fulfilled" ? results[1].value : [];
+  const unavailable = results[0].status === "rejected";
   return (
     <main className={`site-container ${styles.page}`}>
-      <header><div><p className="section-kicker">MARKET DESK</p><h1>IPO news & filings</h1><p>Issue updates, regulatory filings and listing coverage—kept concise and source-aware.</p></div><div className="mock-badge"><span /> Development articles</div></header>
-      <NewsArchive articles={articles} ipos={ipos} />
+      <header><div><p className="section-kicker">MARKET DESK</p><h1>IPO news & filings</h1><p>Issue updates, regulatory filings and listing coverage—kept concise and source-aware.</p></div>{unavailable ? <div className="mock-badge"><span /> Data temporarily unavailable</div> : articles.some((article) => article.source.sourceName.toLowerCase().includes("mock")) ? <div className="mock-badge"><span /> Development articles</div> : <div className="mock-badge"><span /> Original publishers linked</div>}</header>
+      <NewsArchive articles={articles} ipos={ipos} unavailable={unavailable} />
     </main>
   );
 }
