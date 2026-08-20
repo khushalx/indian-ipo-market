@@ -1,4 +1,3 @@
-import { env } from "cloudflare:workers";
 import { z } from "zod";
 import type { DataMode } from "@/types";
 
@@ -6,7 +5,7 @@ const optionalString = z.string().trim().optional().transform((value) => value |
 const positiveMinutes = z.coerce.number().int().positive();
 
 const runtimeSchema = z.object({
-  DATA_MODE: z.enum(["live", "mock"]).default("live"),
+  DATA_MODE: z.enum(["live", "mock"]).default("mock"),
   IPO_DATA_PROVIDER: optionalString,
   IPO_API_BASE_URL: optionalString,
   IPO_API_KEY: optionalString,
@@ -49,9 +48,16 @@ export type RuntimeConfig = z.infer<typeof runtimeSchema>;
 
 let cached: RuntimeConfig | undefined;
 
+function getRawEnv(): Record<string, unknown> {
+  if (typeof process !== "undefined" && process.env) {
+    return process.env as Record<string, unknown>;
+  }
+  return {};
+}
+
 export function getRuntimeConfig(): RuntimeConfig {
   if (cached) return cached;
-  const runtime = env as unknown as Record<string, unknown>;
+  const runtime = getRawEnv();
   cached = runtimeSchema.parse(runtime);
   return cached;
 }
@@ -78,3 +84,4 @@ export function hasConfiguredProvider(kind: "ipo" | "gmp" | "market" | "news"): 
 export function resetRuntimeConfigForTests() {
   cached = undefined;
 }
+

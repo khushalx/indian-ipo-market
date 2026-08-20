@@ -1,4 +1,3 @@
-import { env } from "cloudflare:workers";
 import { drizzle } from "drizzle-orm/d1";
 import * as schema from "./schema";
 
@@ -60,7 +59,10 @@ export class D1SchemaUnavailableError extends Error {
 
 /** Return the raw D1 binding without spreading runtime access across callers. */
 export function getD1(database?: D1Database): D1Database {
-  const binding = database ?? env.DB;
+  let binding = database;
+  if (!binding && typeof globalThis !== "undefined") {
+    binding = (globalThis as unknown as { DB?: D1Database }).DB;
+  }
 
   if (!binding) {
     throw new D1BindingUnavailableError();
@@ -73,6 +75,7 @@ export function getD1(database?: D1Database): D1Database {
 export function getDb(database?: D1Database) {
   return drizzle(getD1(database), { schema });
 }
+
 
 function normalizeSingleStatement(statement: string): string {
   const trimmed = statement.trim();

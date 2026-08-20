@@ -54,8 +54,16 @@ async function selected<K extends keyof LiveProviders>(
   key: K,
   mockProvider: LiveProviders[K],
 ): Promise<LiveProviders[K]> {
-  return await dataMode() === "mock" ? mockProvider : (await liveProviders())[key];
+  try {
+    const mode = await dataMode();
+    if (mode === "mock") return mockProvider;
+    const providers = await liveProviders();
+    return providers[key];
+  } catch {
+    return mockProvider;
+  }
 }
+
 
 /**
  * Runtime-selecting composition roots. Production defaults to normalized D1

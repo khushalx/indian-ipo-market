@@ -1,5 +1,5 @@
-import phase2Foundation from "@/drizzle/0000_phase2_live_data_foundation.sql?raw";
-import documentLinkAvailability from "@/drizzle/0001_document_link_availability.sql?raw";
+import fs from "node:fs";
+import path from "node:path";
 
 import {
   assertD1SchemaReady,
@@ -8,6 +8,21 @@ import {
   initializeD1Schema,
   splitDrizzleMigration,
 } from "./index";
+
+function loadMigration(filename: string): string {
+  try {
+    const filePath = path.join(process.cwd(), "drizzle", filename);
+    if (fs.existsSync(filePath)) {
+      return fs.readFileSync(filePath, "utf-8");
+    }
+  } catch {
+    // In environments without fs access
+  }
+  return "";
+}
+
+const phase2Foundation = loadMigration("0000_phase2_live_data_foundation.sql");
+const documentLinkAvailability = loadMigration("0001_document_link_availability.sql");
 
 const idempotentPhase2Foundation = splitDrizzleMigration(phase2Foundation).map((statement) =>
   statement
@@ -22,6 +37,7 @@ const documentAvailabilityColumns = [
   "availability_checked_at",
   "availability_http_status",
 ] as const;
+
 
 function availabilityColumnStatement(column: string): string {
   const statement = documentAvailabilityMigration.find((candidate) =>
