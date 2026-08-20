@@ -1,3 +1,5 @@
+import { Calculator } from "lucide-react";
+import { IPOCalculator } from "@/components/ipo-calculator";
 import type {
   IPO,
   IPODocument,
@@ -39,6 +41,7 @@ export type IpoDetailPageProps = {
 
 const navigation = [
   ["overview", "Overview"],
+  ["calculator", "Calculator"],
   ["gmp", "GMP"],
   ["subscription", "Subscription"],
   ["financials", "Financials"],
@@ -99,6 +102,18 @@ export function IpoDetailPage({
         ) : null}
 
         <OverviewSection ipo={ipo} />
+
+        <section id="calculator" className={styles.section}>
+          <div className={styles.sectionHeading}>
+            <div>
+              <p className={styles.sectionEyebrow}>INVESTMENT SIMULATION</p>
+              <h2>IPO lot &amp; return calculator</h2>
+              <p>Estimate minimum bid amounts, lot sizing, and potential listing gains based on prevailing GMP.</p>
+            </div>
+          </div>
+          <IPOCalculator ipo={ipo} />
+        </section>
+
         <GMPSection ipo={ipo} gmpHistory={gmpHistory} />
         <SubscriptionSection subscriptions={subscriptions} />
         <FinancialsSection financials={financials} />
@@ -126,3 +141,4 @@ export function IpoDetailPage({
     </main>
   );
 }
+

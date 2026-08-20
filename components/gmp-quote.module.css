@@ -1,23 +1,27 @@
-.quote,
-.amount,
-.meta {
-  display: block;
-}
-
 .quote {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-start;
   font-variant-numeric: tabular-nums;
 }
 
 .amount {
-  font-weight: 680;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
 }
 
 .meta {
-  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 3px;
   color: var(--text-tertiary);
-  font-size: 8px;
-  font-weight: 450;
-  line-height: 1.35;
+  font-size: 11px;
+  font-weight: 500;
   white-space: nowrap;
 }
 
@@ -29,11 +33,17 @@
   color: var(--red);
 }
 
-.neutral,
-.unavailable {
+.neutral {
   color: var(--text-secondary);
+}
+
+.unavailable {
+  color: var(--text-tertiary);
+  font-size: 14px;
 }
 
 .timestamp {
   color: var(--text-tertiary);
+  font-size: 10px;
 }
+

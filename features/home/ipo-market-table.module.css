@@ -1,45 +1,470 @@
-.tabs { min-height: 45px; display: flex; align-items: stretch; gap: 27px; border-bottom: 1px solid var(--line); overflow-x: auto; scrollbar-width: none; }
-.tabs button { flex: none; border: 0; border-bottom: 2px solid transparent; background: none; padding: 0; color: var(--text-secondary); font-size: 11px; cursor: pointer; }
-.tabs button span { margin-left: 3px; color: var(--text-tertiary); font-size: 8px; }
-.tabs .active { border-color: var(--accent); color: var(--accent); font-weight: 650; }
-.tabs > a { flex: none; margin-left: auto; display: flex; align-items: center; gap: 5px; color: var(--text-secondary); font-size: 9px; font-weight: 620; }
-.desktopTable { overflow-x: auto; background: var(--surface); border-bottom: 1px solid var(--line); }
-.desktopTable table { width: 100%; min-width: 1050px; border-collapse: collapse; }
-.desktopTable th { border-bottom: 1px solid var(--line); padding: 12px 13px; text-align: left; color: var(--text-tertiary); font-size: 8px; font-weight: 670; letter-spacing: .09em; text-transform: uppercase; white-space: nowrap; }
-.desktopTable td { height: 66px; border-bottom: 1px solid var(--line-soft); padding: 10px 13px; color: var(--text); font-size: 11px; white-space: nowrap; }
-.desktopTable tbody tr:last-child td { border-bottom: 0; }
-.desktopTable tbody tr:hover { background: #faf8f2; }
-.company { display: block; min-width: 185px; }
-.company strong, .company small { display: block; }
-.company strong { color: var(--ink); font-size: 12px; font-weight: 650; }
-.company small { margin-top: 5px; color: var(--text-tertiary); font-size: 8px; }
-.number { font-variant-numeric: tabular-nums; }
-.number b, .number small { display: block; }
-.number b { font-size: 11px; }
-.number small { margin-top: 4px; font-size: 8px; }
-.strong { color: var(--ink) !important; font-weight: 650; }
-.missing { color: var(--text-tertiary); }
-.status { display: inline-block; border-left: 2px solid currentColor; padding: 3px 0 3px 6px; font-size: 7px; font-weight: 760; letter-spacing: .09em; text-transform: uppercase; }
-.open { color: var(--green); }
-.upcoming { color: #55627a; }
-.closed { color: var(--ochre); }
-.listed { color: var(--text-secondary); }
-.withdrawn { color: var(--red); }
-.mobileList { display: none; }
-.mobileItem { border-bottom: 1px solid var(--line); padding: 18px 0; }
-.mobileTop, .mobileMeta { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
-.mobileTop strong, .mobileTop small { display: block; }
-.mobileTop strong { font-size: 13px; }
-.mobileTop small { margin-top: 5px; color: var(--text-tertiary); font-size: 9px; }
-.mobileMeta { align-items: center; margin-top: 14px; color: var(--text-tertiary); font-size: 9px; }
-.mobileItem dl { display: grid; grid-template-columns: repeat(2, 1fr); gap: 13px; margin: 17px 0 0; }
-.mobileItem dl div { border-left: 1px solid var(--line); padding-left: 10px; }
-.mobileItem dt { color: var(--text-tertiary); font-size: 8px; }
-.mobileItem dd { margin: 5px 0 0; font-size: 11px; font-variant-numeric: tabular-nums; }
-
-@media (max-width: 720px) {
-  .tabs { gap: 22px; }
-  .tabs > a { display: none; }
-  .desktopTable { display: none; }
-  .mobileList { display: block; }
+.container {
+  margin-top: 24px;
 }
+
+.topBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 8px;
+  margin-bottom: 20px;
+}
+
+.tabs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.tabs button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 1px solid transparent;
+  background: transparent;
+  padding: 8px 14px;
+  border-radius: 8px;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.tabs button:hover {
+  background: var(--surface-muted);
+  color: var(--ink);
+}
+
+.tabCount {
+  display: inline-flex;
+  padding: 1px 6px;
+  border-radius: 9999px;
+  background: var(--surface-muted);
+  color: var(--text-tertiary);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.tabs .active {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border-color: rgba(79, 70, 229, 0.2);
+}
+
+.tabs .active .tabCount {
+  background: var(--accent);
+  color: #fff;
+}
+
+.topActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: none;
+}
+
+.viewToggle {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 2px;
+  background: var(--surface);
+}
+
+.viewBtn, .viewBtnActive {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border: 0;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.viewBtn {
+  background: transparent;
+  color: var(--text-tertiary);
+}
+
+.viewBtn:hover {
+  color: var(--ink);
+}
+
+.viewBtnActive {
+  background: var(--accent);
+  color: #fff;
+}
+
+.allLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--accent);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.allLink:hover {
+  color: var(--accent-hover);
+}
+
+/* Desktop Table View */
+.desktopTable {
+  overflow-x: auto;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+}
+
+.desktopTable table {
+  width: 100%;
+  min-width: 1080px;
+  border-collapse: collapse;
+}
+
+.desktopTable th {
+  background: var(--surface-muted);
+  border-bottom: 1px solid var(--line);
+  padding: 12px 16px;
+  text-align: left;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.desktopTable td {
+  height: 68px;
+  border-bottom: 1px solid var(--line-soft);
+  padding: 12px 16px;
+  color: var(--text);
+  font-size: 13px;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.desktopTable tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.desktopTable tbody tr:hover {
+  background: #f8fafc;
+}
+
+.company {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 200px;
+}
+
+.companyIcon {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: none;
+  place-items: center;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-family: var(--font-editorial);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.company strong {
+  display: block;
+  color: var(--ink);
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.company small {
+  display: block;
+  margin-top: 2px;
+  color: var(--text-tertiary);
+  font-size: 11px;
+}
+
+.number {
+  font-variant-numeric: tabular-nums;
+  font-weight: 500;
+}
+
+.number b, .number small {
+  display: block;
+}
+
+.number b {
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.number small {
+  margin-top: 2px;
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.strong {
+  color: var(--ink) !important;
+  font-weight: 700 !important;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.open {
+  background: var(--green-soft);
+  color: var(--green);
+  border: 1px solid var(--green-border);
+}
+
+.upcoming {
+  background: #f1f5f9;
+  color: #475569;
+  border: 1px solid #cbd5e1;
+}
+
+.closed {
+  background: var(--amber-soft);
+  color: var(--ochre);
+  border: 1px solid var(--amber-border);
+}
+
+.listed {
+  background: #f1f5f9;
+  color: var(--text-secondary);
+  border: 1px solid var(--line);
+}
+
+.withdrawn {
+  background: var(--red-soft);
+  color: var(--red);
+  border: 1px solid var(--red-border);
+}
+
+.emptyCell {
+  padding: 32px 16px;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 13px;
+}
+
+/* Cards Grid View */
+.cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.gridCard {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--card-radius);
+  box-shadow: var(--card-shadow);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.2s ease;
+}
+
+.gridCard:hover {
+  border-color: var(--line-strong);
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.cardHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cardTitle {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cardTitle strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.cardTitle small {
+  display: block;
+  margin-top: 2px;
+  color: var(--text-tertiary);
+  font-size: 11px;
+}
+
+.cardBadgeRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+}
+
+.dateBadge {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.cardMetrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 16px 0 0;
+  padding: 14px;
+  background: var(--surface-muted);
+  border-radius: 8px;
+}
+
+.cardMetrics dt {
+  margin: 0;
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.cardMetrics dd {
+  margin: 4px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+
+.cardFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line-soft);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.cardFooter strong {
+  color: var(--ink);
+}
+
+.cardLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  color: var(--accent);
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.emptyGrid {
+  grid-column: 1 / -1;
+  padding: 40px 20px;
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: 14px;
+}
+
+/* Mobile List */
+.mobileList {
+  display: none;
+}
+
+@media (max-width: 1024px) {
+  .cardsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .topBar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .topActions {
+    width: 100%;
+    justify-content: space-between;
+  }
+  .desktopTable {
+    display: none;
+  }
+  .cardsGrid {
+    display: none;
+  }
+  .mobileList {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .mobileItem {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--card-radius);
+    padding: 16px;
+    box-shadow: var(--card-shadow);
+  }
+  .mobileTop {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .mobileMeta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .mobileItem dl {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 14px 0 0;
+    padding: 12px;
+    background: var(--surface-muted);
+    border-radius: 8px;
+  }
+  .mobileItem dt {
+    font-size: 11px;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+  }
+  .mobileItem dd {
+    margin: 3px 0 0;
+    font-size: 13px;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+  }
+}
+
