@@ -66,4 +66,3 @@ npm test
 npm run build
 ```
 
-Set `DATA_MODE=mock` only for explicit fixture-driven development or rendered tests. Node.js 22.13 or later is required.
